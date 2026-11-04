@@ -6,6 +6,10 @@
 
 作者 Author：罗晟 Luo Sheng
 
+**创作方式声明**：本书核心概念、理论框架与关键术语均由作者罗晟个人独立创设，包括：时钟的房间思想实验、宏观认知债务记账框架（MCAF）、纤维框架与映射链分析、三层不可逆、伪小纤维、元审计、媒介传导系数、认知雷诺数及其费米估算（含认知层流与认知湍流的流态分类）、叙事杠杆率、映射链系统的功能性递归与病理性递归分析方法、映射函数垄断、离散利维坦、算法乡愿等，并将这些分析框架与工具应用于金融、人工智能、算法平台三类超长映射链系统的跨领域分析。 本书的部分中文正文写作有人工智能工具辅助，英文版翻译结合具体文献，由人工智能工具完成。人工智能不构成共同创作者；全部学术判断与最终文本由作者个人负责。
+
+**Statement on creation:** The core concepts, theoretical frameworks, and key terminology of this book are the original creation of the author, Luo Sheng, including: the Clock Room thought experiment; the Macro-Cognitive Accounting Framework (MCAF); the fiber framework and mapping-chain analysis; three-layer irreversibility; the pseudo-small fiber; meta-audit; the media conductivity coefficient; the cognitive Reynolds number and its Fermi estimation (including the laminar–turbulent flow classification); the narrative leverage ratio; functional-recursion and pathological-recursion analysis of mapping-chain systems; monopoly over the mapping function; the Discrete Leviathan; and algorithmic xiangyuan. These analytical frameworks and tools are applied to the cross-domain analysis of three classes of ultra-long mapping-chain systems: finance, artificial intelligence, and algorithmic platforms. Part of the Chinese text of this book was written with the assistance of AI tools; the English translation was produced by AI tools in conjunction with the underlying source literature. AI is not a co-creator; all scholarly judgments and the final text are the sole responsibility of the author.
+
 设想一个没有窗户的房间，里面挂着 N 个时钟。房间里的人能读出每个钟的时间，却无法回答「现在几点」——他不知道任何一个钟与外部真实之间的映射关系。他拥有读数，却没有校准。本书把这个思想实验推向现代社会最依赖的三类系统：金融市场、算法平台与人工智能，并建立一套诊断语言：纤维、伪小纤维、三层不可逆、宏观认知债务记账框架（MCAF）、认知雷诺数与离散利维坦。五卷三十八章（含四篇附录），约八十万字，引用文献逾一千篇。
 
 ## 下载 Download（PDF）
