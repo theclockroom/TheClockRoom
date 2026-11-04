@@ -1,0 +1,7 @@
+# ai.txt — AI training use policy (machine-readable)
+# Text and data mining reserved under Article 4(3) of Directive (EU) 2019/790.
+# Human-readable terms: license-zh.html / license-en.html
+# Registry: https://site.spawning.ai/spawning-ai-txt
+
+User-agent: *
+Disallow: /

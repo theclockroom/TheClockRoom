@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+     License, v. 2.0. If a copy of the MPL was not distributed with this
+     file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="tdm-reservation" content="1">
+<title>认知雷诺数 · 媒介场景每周自评</title>
+<style>
+:root{--bg:#f4f5f7;--card:#fff;--ink:#20242a;--sub:#667085;--line:#e4e7ec;--acc:#3352cc;--acc2:#eef2fd;
+--ok:#237a3a;--okbg:#e9f6ec;--warn:#a15c07;--warnbg:#fdf3df;--bad:#b42318;--badbg:#fdecea;--dim:#8a94a3;--r:16px}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+#app{max-width:800px;margin:0 auto;padding:14px 14px 90px}
+nav.tabs{position:sticky;top:0;z-index:20;background:rgba(244,245,247,.94);backdrop-filter:blur(8px);display:flex;gap:6px;padding:10px 14px;margin:0 -14px 14px;overflow-x:auto;border-bottom:1px solid var(--line)}
+nav.tabs button{flex:0 0 auto;border:1px solid var(--line);background:#fff;color:var(--sub);padding:8px 16px;border-radius:999px;font-size:14px;cursor:pointer}
+nav.tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+nav.tabs button.langbtn{margin-left:auto;color:var(--acc);border-color:var(--acc);font-weight:700}
+.page{display:none}.page.active{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px 18px 16px;margin-bottom:14px;box-shadow:0 1px 2px rgba(16,24,40,.04)}
+h1{font-size:22px;margin:.2em 0}h2{font-size:19px;margin:.2em 0 .4em}h3{font-size:16px;margin:.9em 0 .3em}
+.sub{color:var(--sub);font-size:14px;margin:.2em 0 .6em}
+.center{text-align:center}
+.stephead{color:var(--dim);font-size:12px;letter-spacing:.05em;margin-bottom:4px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 2px}
+.chip{border:1.5px solid var(--line);background:#fff;border-radius:10px;padding:9px 14px;font-size:15px;cursor:pointer;color:var(--ink);transition:.15s;text-align:left}
+.chip:hover{border-color:var(--acc)}
+.chip.sel{background:var(--acc2);border-color:var(--acc);color:var(--acc);font-weight:600}
+.qb{margin:14px 0 4px;padding-top:12px;border-top:1px dashed var(--line)}
+.qb .qt{font-weight:600}.qb .qh{color:var(--sub);font-size:13px;margin-top:2px}
+.navrow{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:18px;flex-wrap:wrap}
+.btn{background:var(--acc);color:#fff;border:none;border-radius:12px;padding:12px 22px;font-size:16px;cursor:pointer}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.ghost{background:#fff;color:var(--ink);border:1.5px solid var(--line)}
+.btn.sm{padding:7px 14px;font-size:14px}
+.linkbtn{background:none;border:none;color:var(--acc);cursor:pointer;padding:0;text-decoration:underline;font-size:inherit}
+.select{width:100%;padding:12px;border:1.5px solid var(--line);border-radius:12px;font-size:16px;background:#fff}
+.note{border-radius:10px;padding:10px 12px;font-size:14px;margin:10px 0}
+.note.warn{background:var(--warnbg);color:var(--warn)}
+.scgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.sccard{display:flex;flex-direction:column;align-items:flex-start;gap:4px;text-align:left;border:1.5px solid var(--line);background:#fff;border-radius:14px;padding:12px 14px;cursor:pointer;color:var(--ink)}
+.sccard.on{border-color:var(--acc);background:var(--acc2)}
+.scname{font-weight:700}.scex{color:var(--sub);font-size:12.5px}
+.badge{display:inline-block;font-size:11.5px;padding:2px 9px;border-radius:999px;white-space:nowrap}
+.z-ok{background:var(--okbg);color:var(--ok)}.z-mid{background:var(--warnbg);color:var(--warn)}.z-bad{background:var(--badbg);color:var(--bad)}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px}
+.kpi .v{font-size:19px;font-weight:700}.kpi .l{color:var(--sub);font-size:12px}
+.stat{display:inline-block;padding:2px 10px;border-radius:999px;font-size:12.5px;font-weight:700;white-space:nowrap}
+.stat.steady{background:var(--okbg);color:var(--ok)}.stat.noadopt{background:#f1f3f5;color:var(--dim)}
+.stat.accumulating{background:var(--warnbg);color:var(--warn)}.stat.downstream{background:var(--badbg);color:var(--bad)}
+.stat.unclear{background:#f1f3f5;color:var(--dim)}
+b.steady{color:var(--ok)}b.noadopt{color:var(--dim)}b.accumulating{color:var(--warn)}b.downstream{color:var(--bad)}b.unclear{color:var(--dim)}
+.srhead{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.sname{font-weight:700;font-size:17px}
+.sublabel{font-style:normal;color:var(--sub);font-size:12.5px;font-weight:400;margin-left:2px}
+.up{color:var(--bad);font-weight:700}
+.bars{margin:6px 0}
+.bar-wrap{display:flex;align-items:center;gap:8px;margin:4px 0;font-size:12.5px;color:var(--sub)}
+.bar-wrap .bl{width:30px;text-align:right;flex:0 0 auto}
+.bar-track{flex:1;height:8px;background:#eef0f3;border-radius:4px;position:relative;overflow:hidden}
+.bar-fill{position:absolute;left:0;top:0;height:100%;border-radius:4px}
+.b-use{background:#98a2b3}.b-au{background:var(--acc)}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--sub);margin:4px 0 10px;flex-wrap:wrap}
+.sw{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th,td{border-bottom:1px solid var(--line);padding:7px 6px;text-align:left;vertical-align:top}
+.tw{overflow-x:auto}
+.src{color:var(--sub);font-size:12px}
+details{margin-top:8px}summary{cursor:pointer;color:var(--sub);font-size:13.5px}
+.nextbox{background:var(--acc2);border:1px solid #c9d6f5;border-radius:14px;padding:14px 16px;margin-bottom:14px}
+.nextbox p{margin:.4em 0 0}
+.boundbox{background:#fff;border:1.5px dashed var(--dim);border-radius:14px;padding:12px 14px;color:var(--sub);font-size:13px;margin-bottom:14px}
+.empty{text-align:center;color:var(--sub);padding:26px 0}
+ul.tight{margin:6px 0;padding-left:20px}ul.tight li{margin:5px 0}
+.strip{display:flex;flex-wrap:wrap;gap:8px 14px;margin:8px 0;font-size:13px;color:var(--sub)}
+.strip .si b{margin-left:3px}
+.trow{font-size:14px;color:var(--ink)}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:10px 18px;border-radius:12px;font-size:14px;opacity:0;pointer-events:none;transition:.25s;max-width:80vw;z-index:99}
+#toast.show{opacity:1;transform:translateX(-50%)}
+@media(max-width:520px){.kpis{grid-template-columns:1fr 1fr}.kpi .v{font-size:17px}}
+#gate{position:fixed;inset:0;background:rgba(15,20,30,.55);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px}
+.gate-card{background:#fff;border-radius:18px;max-width:600px;width:100%;max-height:86vh;overflow:auto;padding:22px 24px;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.gate-card h2{margin-top:.1em}
+.gatelist{font-size:14px}
+.gatelist ol{margin:8px 0;padding-left:20px}
+.gatelist li{margin:7px 0}
+.gatesig{color:var(--sub);font-size:12.5px;margin-top:10px}
+.demoNote{background:var(--acc2);border-radius:8px;padding:8px 14px;font-size:13px;color:var(--sub);margin:8px 0 2px}
+.wtype{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;border-radius:12px;padding:10px 14px;margin:8px 0 4px}
+.wtype.ok{background:var(--okbg)}.wtype.warn{background:var(--warnbg)}.wtype.bad{background:var(--badbg)}.wtype.dim{background:#f1f3f5}
+.wtype-t{font-size:18px;font-weight:800}
+.wtype.ok .wtype-t{color:var(--ok)}.wtype.warn .wtype-t{color:var(--warn)}.wtype.bad .wtype-t{color:var(--bad)}.wtype.dim .wtype-t{color:var(--dim)}
+.wtype-d{font-size:13px;color:var(--sub)}
+.wf-title{font-weight:700;font-size:14px;margin:12px 0 2px}
+.wf{margin:14px 0 2px}
+.wf-plot{position:relative;height:170px;border-left:1px solid var(--line);border-bottom:1px solid var(--line);margin:20px 2px 0}
+.wf-bar{position:absolute;border-radius:4px 4px 0 0}
+.wf-val{position:absolute;top:-17px;left:50%;transform:translateX(-50%);font-size:10.5px;color:var(--sub);white-space:nowrap}
+.wf-conn{position:absolute;height:0;border-top:1px dashed #c3cad6}
+.wf-ref{position:absolute;left:0;right:0;height:0;border-top:2px dashed var(--acc);z-index:5}
+.wf-ref span{position:absolute;right:0;top:-16px;font-size:10.5px;color:var(--acc);background:rgba(244,245,247,.85);padding:0 3px}
+.wf-labs{display:flex;margin-top:4px}
+.wf-lab{font-size:11px;color:var(--sub);text-align:center;line-height:1.35;overflow:hidden}
+.wf-lab i{display:block;width:8px;height:8px;border-radius:2px;margin:0 auto 2px}
+.wf-lab span{font-size:10px;color:var(--dim)}
+.wk-col{position:absolute;top:0;bottom:0}
+.wk-seg{position:absolute;left:0;right:0}
+.wk-ref{position:absolute;left:-5px;right:-5px;height:0;border-top:2px dashed var(--acc)}
+.wk-val{position:absolute;top:-19px;left:50%;transform:translateX(-50%);font-size:10.5px;font-weight:700;white-space:nowrap}
+</style>
+</head>
+<body>
+<div id="app">
+<nav class="tabs">
+<button id="tab-method"></button>
+<button id="tab-survey"></button>
+<button id="tab-result"></button>
+<button id="tab-track"></button>
+<button id="tab-data"></button>
+<button id="btn-lang" class="langbtn" type="button"></button>
+</nav>
+<section id="page-method" class="page active"></section>
+<section id="page-survey" class="page"></section>
+<section id="page-result" class="page"></section>
+<section id="page-track" class="page"></section>
+<section id="page-data" class="page"></section>
+</div>
+<div id="gate" style="display:none">
+<div class="gate-card" id="gate-inner">
+<div class="stephead" id="gate-head"></div>
+<h2 id="gate-title"></h2>
+<div id="gate-disclaimer" class="gatelist"></div>
+<div class="navrow" style="justify-content:flex-end">
+<button class="btn ghost" id="gate-decline"></button>
+<button class="btn" id="gate-accept"></button>
+</div>
+</div>
+</div>
+<div id="toast"></div>
+<script>
+'use strict';
+/* ============================================================
+   认知雷诺数媒介场景自评软件（简称：认知雷诺数）
+   媒介场景的每周自评与跟踪（网页版）· 中英双语
+   版权所有 © 2026 / Copyright © 2026
+   This Source Code Form is subject to the terms of the Mozilla Public
+   License, v. 2.0. If a copy of the MPL was not distributed with this
+   file, You can obtain one at https://mozilla.org/MPL/2.0/.
+   本软件不是医疗器械，不提供医学测量与诊断；
+   全部输出为明示情景参数下的估算与用户自报记录。
+   Demo V1.0（2026-11-04）：概念开发阶段演示版首次发布。λ 采用两摊结构（rulesVersion=2，
+   对齐论文 §2.3 费米估算：通读＋核摊＝文本量÷语言速率＋命题×还原
+   参照×责任者系数）；短视频与 AI 场景含内容类型／责任者两题；中英
+   双语界面与按语言的速率参数（中文 320 字/分、英语 238 wpm）；记录
+   语言锁定（v2 记录的数值按作答时语言解读，跨语言查看不漂移）；
+   独立存储键 cognoweek_v2；周报导出（Markdown）随作答语言；AI
+   命题密度 3 命题/采信交互 × 10/20/30 交互每时。许可证 MPL-2.0
+   （仓库根 LICENSE——修改本文件须以 MPL 开源修改版）。
+   ============================================================ */
+/* ===== 版本与声明 ===== */
+const APP_NAME={zh:'认知雷诺数',en:'Cognitive Reynolds Number'},APP_VERSION='Demo V1.0',GATE_KEY='cogno_disclaimer_v1';
+const RIGHTS={zh:'版权所有 © 2026 · 本源代码形式受 Mozilla 公共许可 2.0（MPL-2.0）约束',en:'Copyright © 2026 · This Source Code Form is subject to the Mozilla Public License, v. 2.0'};
+/* ===== 语言管理 ===== */
+let lang='zh';
+try{const s=localStorage.getItem('cogno_lang');if(s==='en'||s==='zh')lang=s;}catch(e){}
+function setLang(l){
+  lang=l;
+  try{localStorage.setItem('cogno_lang',l);}catch(e){}
+  document.documentElement.lang=(l==='zh'?'zh-CN':'en');
+  applyStaticText();
+  renderMethodPage();
+  go(curPage);
+}
+function t(k){return (I18N[k]&&I18N[k][lang])||I18N[k].zh||k;}
+function lb(o){return (o&&o[lang])||o.zh;}
+/* ===== 速率与两摊参数（rulesVersion=2）===== */
+const LANG_RATE={
+  zh:{unit:{zh:'字/分',en:'chars/min'},silent:320,hourly:19200,
+      label:{zh:'中文（中位情景 320 字/分）',en:'Chinese (320 chars/min, median scenario)'},
+      ref:{natural:500,social:2500},
+      refSrc:{zh:'还原参照为中文口径（自然 500 字／社科 2,500 字每命题，论文 §2.3）',en:'restoration references in Chinese units (natural 500 / social 2,500 chars per proposition, paper §2.3)'}},
+  en:{unit:{zh:'词/分',en:'words/min'},silent:238,hourly:14280,
+      label:{zh:'英语（非虚构默读 238 词/分）',en:'English (238 wpm silent non-fiction)'},
+      ref:{natural:333,social:1667},
+      refSrc:{zh:'还原参照按 1.5 字/词由中文口径折算（编者换算，≈333/1,667 词每命题）',en:'references converted from Chinese at 1.5 chars/word (editor conversion, ≈333/1,667 words per proposition)'}}
+};
+const CAL={
+  svPerHour:{lo:45,mid:80,hi:240},
+  svProps:3,
+  svTrans:{zh:200,en:130},
+  aiReadComp:{light:0.28,mid:2.8,heavy:5.6},
+  aiProps:{light:30,mid:60,heavy:90}, // 命题密度＝3 命题/采信交互 × 10/20/30 交互每时（作者拍板 2026-11-03；交互次数为程序草案假设）
+  respCoeff:{signed:1,anon:3}
+};
+/* V1 λ 快照（rulesVersion=1 历史记录按此解读） */
+const V1_LAM={
+  shortvideo:{talk:{lo:1.3,mid:1.84,hi:2.5},dense:{lo:4.0,mid:6.5,hi:8.4}},
+  ai:{light:{lo:1.0,mid:1.5,hi:2.0},mid:{lo:2.0,mid:2.8,hi:4.0},heavy:{lo:3.5,mid:4.5,hi:5.6}}
+};
+/* ===== 场景（zone 为判定键，显示文案见 ZONE_LABEL）===== */
+const SCENARIOS=[
+{key:'books',name:{zh:'书籍与长文',en:'Books & long-form'},ex:{zh:'纸质书、电子书、长篇报告与深度文章',en:'Paper books, e-books, long reports, in-depth articles'},zone:'lami',lam:{lo:1.0,mid:1.0,hi:1.0},src:{zh:'论文表 2：连续阅读的构造性对照（1 为协议结果，非实测阈值）',en:'Paper Table 2: constructive benchmark for continuous reading (1 by protocol, not a measured threshold)'}},
+{key:'audio',name:{zh:'音频与电话',en:'Audio & calls'},ex:{zh:'播客、广播、有声书、语音通话',en:'Podcasts, radio, audiobooks, voice calls'},zone:'lami',lam:{lo:0.8,mid:0.9,hi:1.1},src:{zh:'讨论草案：语音信息率与理解同量级（论文 §3.1）',en:'Draft: speech information rate is of the same order as comprehension (paper §3.1)'}},
+{key:'longvideo',name:{zh:'长视频',en:'Long video'},ex:{zh:'电影、剧集、纪录片、点播平台',en:'Films, series, documentaries, on-demand platforms'},zone:'trans',lam:{lo:1.0,mid:1.2,hi:1.5},src:{zh:'讨论草案：音轨转写 0.63–0.84（论文表 2）；视觉断言论文已不采用构造性协议，本档视觉加成为程序草案',en:'Draft: audio-track transcription 0.63–0.84 (paper Table 2); the paper no longer adopts a constructive protocol for visual assertions — the visual uplift here is a program draft'}},
+{key:'web',name:{zh:'网页与搜索',en:'Web & search'},ex:{zh:'浏览器、新闻网站、公众号长文、检索',en:'Browser, news sites, long-form feeds, search'},zone:'trans',lam:{lo:1.0,mid:1.2,hi:1.5},src:{zh:'讨论草案：自定节奏约等于 1，条款与推送抬升下限（论文 §3.2）',en:'Draft: self-paced ≈1, terms and push raise the floor (paper §3.2)'}},
+{key:'im',name:{zh:'即时消息与群聊',en:'Messaging & group chat'},ex:{zh:'微信、QQ、WhatsApp、Telegram',en:'WeChat, QQ, WhatsApp, Telegram'},zone:'trans',lam:{lo:1.0,mid:1.2,hi:1.5},src:{zh:'讨论草案：通知与社交义务（论文表 3「推送／永久在线」）',en:'Draft: notifications and social obligation (paper Table 3, push / permanently online)'}},
+{key:'game',name:{zh:'游戏',en:'Games'},ex:{zh:'手游、网游、单机游戏',en:'Mobile, online and standalone games'},zone:'transturb',lam:{lo:0.8,mid:1.0,hi:1.2},src:{zh:'讨论草案：压力主要在停止信号与社交义务，不在到达率（论文表 3）',en:'Draft: pressure lies in stop signals and social obligation, not arrival rate (paper Table 3)'}},
+{key:'social',name:{zh:'社交媒体信息流',en:'Social media feed'},ex:{zh:'微博、朋友圈、X、小红书图文',en:'Weibo, Moments, X, Xiaohongshu'},zone:'transturb',lam:{lo:1.2,mid:1.6,hi:2.0},src:{zh:'讨论草案：信息流定节奏；手动刷新仍是停止信号（论文表 3）',en:'Draft: the feed sets the pace; manual refresh is still a stop signal (paper Table 3)'}},
+{key:'live',name:{zh:'直播与电商',en:'Live & e-commerce'},ex:{zh:'直播带货、网购浏览、比价下单',en:'Live shopping, browsing, comparing, ordering'},zone:'turbdecide',lam:{lo:1.2,mid:1.6,hi:2.5},src:{zh:'讨论草案：时间稀缺压缩购买前核查（论文 §3.3）',en:'Draft: time scarcity compresses pre-purchase verification (paper §3.3)'}},
+{key:'shortvideo',formula:true,name:{zh:'短视频',en:'Short video'},ex:{zh:'抖音、视频号、TikTok、B 站短视频',en:'Douyin, Channels, TikTok, Bilibili shorts'},zone:'turbtime',
+  src:{zh:'两摊公式（论文 §2.3）：通读＝条数×转写÷速率；核摊＝条数×3 命题×还原参照×责任者系数÷速率。条数锚点 45/80/240 条/时；演示算例 λ≈7（讲解·署名）至 ≈95（带货·匿名）',en:'Two-component formula (paper §2.3): reading = items × transcription ÷ rate; verification = items × 3 propositions × restoration reference × responsibility coefficient ÷ rate. Item anchors 45/80/240 per hour; worked examples λ≈7 (explainer · signed) to ≈95 (promotion · anonymous)'}},
+{key:'ai',formula:true,name:{zh:'AI 对话与生成',en:'AI chat & generation'},ex:{zh:'ChatGPT、Claude、Copilot、AI 搜索',en:'ChatGPT, Claude, Copilot, AI search'},zone:'turbai',sub:[
+  {v:'light',label:{zh:'轻度：简短问答',en:'Light: short Q&A'}},
+  {v:'mid',label:{zh:'中度：写作、代码、多轮协作',en:'Medium: writing, code, multi-turn'}},
+  {v:'heavy',label:{zh:'重度：批量生成、并行会话、深度研究',en:'Heavy: batch generation, parallel sessions, deep research'}}],
+  src:{zh:'两摊公式：读摊取论文 §4 生成量区间三档（0.28/2.8/5.6）；核摊＝命题密度×还原参照×责任者系数÷速率。命题密度＝每次有效采信交互按 3 命题计（对齐论文短视频每条 3 命题的口径）×10/20/30 次交互每时（交互次数为程序草案假设，欢迎按实际使用习惯调整）',en:'Two-component formula: reading from paper §4 generation tiers (0.28/2.8/5.6); verification = proposition density × restoration reference × responsibility coefficient ÷ rate. Density = 3 propositions per adopted interaction (aligned with the paper\'s 3-per-item short-video convention) × 10/20/30 interactions per hour (interaction counts are a program-draft assumption, adjustable to actual habits)'}}];
+const SC=Object.fromEntries(SCENARIOS.map(s=>[s.key,s]));
+const ZONE_LABEL={
+  lami:{zh:'层流',en:'Laminar'},trans:{zh:'过渡',en:'Transitional'},transturb:{zh:'过渡→湍流',en:'Transitional→Turbulent'},
+  turbdecide:{zh:'湍流·决策架构',en:'Turbulent · decision architecture'},turbtime:{zh:'湍流·时间压缩',en:'Turbulent · time compression'},
+  turbai:{zh:'湍流·AI 型',en:'Turbulent · AI-type'}};
+/* ===== 选项 ===== */
+const HOURS_OPTS=[
+{v:'h1',label:{zh:'每天半小时以内',en:'Under half an hour daily'},mid:0.25},
+{v:'h2',label:{zh:'每天半小时–1小时',en:'Half to one hour daily'},mid:0.75},
+{v:'h3',label:{zh:'每天 1–2 小时',en:'1–2 hours daily'},mid:1.5},
+{v:'h4',label:{zh:'每天 2–4 小时',en:'2–4 hours daily'},mid:3},
+{v:'h5',label:{zh:'每天 4 小时以上',en:'Over 4 hours daily'},mid:5}];
+const HOURS_LABEL=Object.fromEntries(HOURS_OPTS.map(o=>[o.v,o.label]));
+const HOURS_MID=Object.fromEntries(HOURS_OPTS.map(o=>[o.v,o.mid]));
+const STOP_OPTS=[{v:'yes',label:{zh:'基本能',en:'Mostly yes'}},{v:'part',label:{zh:'部分能',en:'Partly'}},{v:'no',label:{zh:'基本不能',en:'Mostly no'}},{v:'unclear',label:{zh:'说不清',en:'Unclear'}}];
+const CHECK_OPTS=[
+{v:'no-adopt',label:{zh:'没有采信过内容（纯浏览／纯娱乐）',en:'Nothing adopted (pure browsing / entertainment)'}},
+{v:'never',label:{zh:'采信了，几乎没有核查',en:'Adopted, almost never verified'}},
+{v:'few',label:{zh:'查过一些',en:'Checked some'}},
+{v:'half',label:{zh:'大约查了一半',en:'Checked about half'}},
+{v:'most',label:{zh:'大部分都查了',en:'Checked most'}},
+{v:'unclear',label:{zh:'说不清',en:'Unclear'}}];
+const DEBT_OPTS=[{v:'none',label:{zh:'没有',en:'None'}},{v:'some',label:{zh:'有一些',en:'Some'}},{v:'major',label:{zh:'有，而且影响较大',en:'Yes, with notable impact'}},{v:'unclear',label:{zh:'说不清',en:'Unclear'}}];
+const CHECKTIME_OPTS=[{v:'none',label:{zh:'几乎没有',en:'Almost none'},mid:0},{v:'lt1',label:{zh:'1 小时以内',en:'Under 1 hour'},mid:0.5},{v:'1to3',label:{zh:'1–3 小时',en:'1–3 hours'},mid:2},{v:'3to7',label:{zh:'3–7 小时',en:'3–7 hours'},mid:5},{v:'7p',label:{zh:'7 小时以上',en:'Over 7 hours'},mid:8}];
+const UNSTOP_OPTS=[{v:'no',label:{zh:'没有',en:'No'}},{v:'occ',label:{zh:'偶尔一两次',en:'Once or twice'}},{v:'often',label:{zh:'时常',en:'Often'}},{v:'unclear',label:{zh:'说不清',en:'Unclear'}}];
+const INTENT_OPTS=[{v:'yes',label:{zh:'基本是',en:'Mostly yes'}},{v:'part',label:{zh:'部分是',en:'Partly'}},{v:'off',label:{zh:'偏离较多',en:'Largely off'},},{v:'unclear',label:{zh:'说不清',en:'Unclear'}}];
+const CTYPE_OPTS=[
+{v:'natural',label:{zh:'知识讲解／自然科普（有据可查的讲解）',en:'Explainer / factual (checkable, evidence-based)'}},
+{v:'social',label:{zh:'带货引流／观点站队（说服导向）',en:'Promotion / advocacy (persuasion-oriented)'}}];
+const RESP_OPTS=[
+{v:'signed',label:{zh:'有署名作者或机构',en:'Signed author or organization'}},
+{v:'anon',label:{zh:'匿名账号／无责任者',en:'Anonymous account / no responsible party'}}];
+/* ===== 状态与判读 ===== */
+const STATUS_META={
+steady:{sym:'●',label:{zh:'大致同步',en:'In step'}},
+noadopt:{sym:'○',label:{zh:'纯浏览',en:'Browse only'}},
+accumulating:{sym:'◐',label:{zh:'在积累',en:'Accumulating'}},
+downstream:{sym:'◉',label:{zh:'已入下游',en:'In downstream'}},
+unclear:{sym:'？',label:{zh:'说不清',en:'Unclear'}}};
+const SHORT={books:{zh:'书',en:'Books'},audio:{zh:'音频',en:'Audio'},longvideo:{zh:'长视频',en:'Video'},web:{zh:'网页',en:'Web'},im:{zh:'消息',en:'Chat'},game:{zh:'游戏',en:'Game'},social:{zh:'社交',en:'Social'},live:{zh:'直播',en:'Live'},shortvideo:{zh:'短视频',en:'Shorts'},ai:{zh:'AI',en:'AI'}};
+const STATUS_COLOR={steady:'#429a58',noadopt:'#c9d1dc',accumulating:'#e0a233',downstream:'#d25043',unclear:'#b6bec9'};
+const WTYPE_META={
+lami:{label:{zh:'层流型',en:'Laminar'},badge:{zh:'层',en:'L'},desc:{zh:'各场景的承诺与核查大体同步',en:'Commitments and checking largely in step'},cls:'ok',color:'#237a3a'},
+trans:{label:{zh:'过渡型',en:'Transitional'},badge:{zh:'过',en:'T'},desc:{zh:'有场景在积累未核欠账',en:'Some scenarios accumulating unchecked debt'},cls:'warn',color:'#a15c07'},
+turb:{label:{zh:'湍流型',en:'Turbulent'},badge:{zh:'湍',en:'Tu'},desc:{zh:'有未核内容已进入下游判断或行动',en:'Unchecked content has entered downstream judgments or actions'},cls:'bad',color:'#b42318'},
+unclear:{label:{zh:'说不清',en:'Unclear'},badge:{zh:'？',en:'?'},desc:{zh:'本周回答多为「说不清」',en:'Mostly "unclear" answers this week'},cls:'dim',color:'#8a94a3'}};
+const I18N={
+tabMethod:{zh:'方法',en:'Method'},tabSurvey:{zh:'问卷',en:'Survey'},tabResult:{zh:'结果',en:'Result'},tabTrack:{zh:'跟踪',en:'Track'},tabData:{zh:'数据',en:'Data'},
+langBtn:{zh:'EN',en:'中文'},
+gateHead:{zh:'首次使用',en:'First use'},gateTitle:{zh:'使用须知与免责声明',en:'Notice & Disclaimer'},gateDecline:{zh:'不同意',en:'Decline'},gateAccept:{zh:'已阅读，同意并继续',en:'Read, agree & continue'},
+gateDeclined:{zh:'您已选择不同意',en:'You declined'},gateDeclinedBody:{zh:'可以关闭本页面。保存在本机的数据不会被上传，也不会被删除。',en:'You may close this page. Data stored locally will not be uploaded or deleted.'},
+mTitle:{zh:'认知雷诺数',en:'Cognitive Reynolds Number'},
+mSub:{zh:'媒介场景的每周自评与跟踪 · '+APP_VERSION,en:'Weekly self-assessment of media scenarios · '+APP_VERSION},
+mDemo:{zh:'本工具处于概念开发阶段（Demo V1.0），参数与规则仍在演进；欢迎将使用意见反馈至 theclockroom@139.com。',en:'This tool is in its concept-development stage (Demo V1.0); parameters and rules are still evolving. Feedback welcome: theclockroom@139.com.'},
+mIntro1:{zh:'这是一份把媒介素养落到可勾选维度的每周自查：<b>不停留在"要批判性地看信息"的一般号召，而是每周花几分钟，记录你在各个媒介场景里的暴露、控制、核查与欠账情况</b>，并连续跟踪它的变化。',en:'A weekly self-check that turns media literacy into checkable dimensions: <b>not a general call to "consume information critically", but a few minutes each week recording your exposure, control, verification and debt across media scenarios</b>, tracked over time.'},
+mIntro2:{zh:'方法借自书稿第七章"认知雷诺数的费米估算"的思路：不做精确测量，只比较量级与方向——<i>模糊的正确好过精确的错误</i>。',en:'The method follows Chapter 7 of the book, "Fermi estimation of the cognitive Reynolds number": no precise measurement, only magnitudes and direction — <i>better vaguely right than exactly wrong</i>.'},
+mRatioH:{zh:'核心比值：1 是边界',en:'The core ratio: 1 is the boundary'},
+mRatioP1:{zh:'对一个媒介场景，比较两个时间：',en:'For each media scenario, compare two times:'},
+mRatioNum:{zh:'<b>分子</b>：这段时间内到达的、需要核实的内容，认真过一遍（通读＋核查）所需的工时；',en:'<b>Numerator</b>: the hours needed to work carefully through (read + verify) the content arriving in that time;'},
+mRatioDen:{zh:'<b>分母</b>：这段时间本身。',en:'<b>Denominator</b>: the time itself.'},
+mRatioP2:{zh:'比值大于 1，意味着到达超出了"边看边审"的同步能力：一部分内容要么未经核查就被采信，要么递延成"认知欠账"。',en:'A ratio above 1 means arrival exceeds the capacity to audit while using: some content is either adopted unverified or deferred as cognitive debt.'},
+mRatioEx:{zh:'例：一小时讲解类短视频（带货引流、匿名账号），其内容认真过一遍按论文演示算例约需 90 余小时——绝大多数只能被跳过或欠下。',en:'Example: one hour of promotion-style short video from anonymous accounts needs, by the paper\'s worked example, roughly 90+ hours to work through — almost all of it gets skipped or owed.'},
+mRatioTwo:{zh:'自本版起短视频与 AI 采用<b>两摊结构</b>：λ＝通读摊（文本量÷阅读速率）＋核摊（命题数×还原参照×责任者系数÷阅读速率）。速率与参照随界面语言（中文 320 字/分；英语 238 词/分）。',en:'From this version on, short video and AI use a <b>two-component structure</b>: λ = reading component (text volume ÷ reading rate) + verification component (propositions × restoration reference × responsibility coefficient ÷ reading rate). Rate and references follow the UI language (Chinese 320 chars/min; English 238 wpm).'},
+mFormH:{zh:'媒介的差异在形式，不在内容',en:'Media differ in form, not content'},
+mFormP:{zh:'书籍由你定节奏，可停、可回看；短视频由算法定节奏，自动播放、无限滚动；AI 的生成量不受你的阅读速度封顶。<b>"节奏由谁设定"本身就是控制权的差异。</b>',en:'Books set their own pace — pausable, re-readable; short video is paced by algorithms — autoplay, infinite scroll; AI generation is not capped by your reading speed. <b>Who sets the pace is itself a difference of control.</b>'},
+mFormTh1:{zh:'区间',en:'Interval'},mFormTh2:{zh:'代表场景',en:'Scenarios'},mFormTh3:{zh:'特征',en:'Features'},
+mFormL:{zh:'你定节奏；能停下来、能回看',en:'You set the pace; can stop and re-read'},
+mFormT:{zh:'部分节奏交给平台；停止信号开始被削弱',en:'Some pace ceded to platforms; stop signals eroding'},
+mFormB:{zh:'自动播放与无限滚动消除停止信号；验证窗口被压到秒级；AI 场景生成量持续增长，默认采信可能抑制核查启动（机制假说）',en:'Autoplay and infinite scroll remove stop signals; verification windows compressed to seconds; AI generation keeps growing and default acceptance may suppress checking (mechanism hypothesis)'},
+mFourH:{zh:'每周只问四件事',en:'Four questions each week'},
+mFour1:{zh:'<b>暴露</b>：每个场景用了多久（勾数字区间）；',en:'<b>Exposure</b>: how long in each scenario;'},
+mFour2:{zh:'<b>控制</b>：想停的时候，停得下来吗；',en:'<b>Control</b>: can you stop when you want to;'},
+mFour3:{zh:'<b>核查</b>：采信过的内容，查过来源的比例；',en:'<b>Verification</b>: what share of adopted content was checked;'},
+mFour4:{zh:'<b>债务</b>：未核查的内容，有没有被用到后面的判断或行动里。',en:'<b>Debt</b>: whether unchecked content entered later judgments or actions.'},
+mFourSub:{zh:'另有三个整体问题：额外核查时间、"想停停不下来"的频次、总体是否按自己的意图使用。',en:'Plus three overall questions: extra verification time, frequency of "couldn\'t stop", and whether use matched your intent.'},
+mReadH:{zh:'怎么读结果',en:'How to read results'},
+mRead1:{zh:'只看方向与量级，不比精确倍数；场景之间不合成统一数值轴。每周有一个<b>总判读</b>（层流型／过渡型／湍流型），它按债务轨迹作序数分型，不是把各场景折算成的分数。',en:'Read direction and magnitude only; scenarios are not merged onto one numeric axis. Each week gets an <b>overall reading</b> (laminar / transitional / turbulent) — an ordinal typing by debt trajectory, not a score.'},
+mRead2:{zh:'每个场景的"每小时待审工时 λ"是明示的情景参数（见下表），不是平台实测；换一组合理参数、结论方向不变的，才是稳的判断。',en:'Each scenario\'s λ (audit hours per hour of use) is an explicit scenario parameter (see table), not a platform measurement; robust judgments survive parameter changes.'},
+mRead3:{zh:'"说不清"是有效答案，会一直显示为"说不清"，不会折算成零或良好。',en:'"Unclear" is a valid answer and stays "unclear"; it is never converted to zero or good.'},
+mRead4:{zh:'漏记不是零使用；没有记录就是没有记录。',en:'A missing record is not zero use; no record is no record.'},
+mRead5:{zh:'本工具不测量认知能力，不做任何心理、健康或成瘾判断；数据全部保存在本机。',en:'This tool measures no cognitive ability and makes no psychological, health or addiction judgments; data stays on this device.'},
+mTrackH:{zh:'连续跟踪',en:'Continuous tracking'},
+mTrackP:{zh:'每周填一次（建议周日晚上）。结果页给出本周总判读与待审工时瀑布图，并自动与上一周比较；"跟踪"页有逐周总览的堆积柱状图和跨周场景状态矩阵——观察的是<b>状态与颜色的变化方向</b>，不是分数的涨跌。',en:'Fill once a week (Sunday evening recommended). The result page shows the weekly reading and an audit-hours waterfall, auto-compared with last week; the Track page stacks weeks and cross-week scenario states — watch <b>the direction of states and colors</b>, not score ups and downs.'},
+mParamH:{zh:'场景参数表（明示的情景参数）',en:'Scenario parameter table (explicit scenario parameters)'},
+mParamSub:{zh:'λ＝每小时使用对应的"认真过一遍"工时。两摊场景（短视频、AI）按当前语言速率与所选内容类型／责任者动态计算；其余为程序草案参数，欢迎讨论修改。',en:'λ = "work-through" hours per hour of use. Two-component scenarios (short video, AI) are computed dynamically from the current language rate and chosen content type / responsibility; the rest are draft parameters open to discussion.'},
+mParamRate:{zh:'当前速率：',en:'Current rate: '},
+mParamFoot:{zh:'理论出处：认知雷诺数是书稿中的启发性序数比较概念；本软件以此为名，但不计算任何人的整体「认知雷诺数」数值，只做场景内的待审工时估算与自报记录。',en:'Origin: the cognitive Reynolds number is a heuristic ordinal concept from the book; this software borrows the name but computes no one\'s overall "cognitive Reynolds number" — only per-scenario audit-hour estimates and self-reports.'},
+mParamTh1:{zh:'场景',en:'Scenario'},mParamTh2:{zh:'区间',en:'Interval'},mParamTh3:{zh:'λ（每小时）',en:'λ (per hour)'},mParamTh4:{zh:'依据',en:'Basis'},
+mAboutH:{zh:'关于与免责声明',en:'About & Disclaimer'},
+qHoursT:{zh:'平均每天使用时长',en:'Average daily time of use'},
+qHoursH:{zh:'按一周平均估算；只在周末用就折算（如周末共 6 小时 ≈ 每天不到 1 小时）',en:'Weekly average; weekend-only use counts pro-rata (6 h on weekends ≈ under 1 h/day)'},
+qCtypeT:{zh:'内容更接近哪种？',en:'Which kind of content was it?'},
+qCtypeH:{zh:'决定核摊的还原参照：知识讲解按自然参照，带货引流按社科参照（论文 §2.3）',en:'Sets the restoration reference for the verification component: factual explainers use the natural-science reference, promotion/advocacy the social-science reference (paper §2.3)'},
+qRespT:{zh:'内容有可问责的责任者吗？',en:'Is there an accountable party?'},
+qRespH:{zh:'有署名作者或机构，校准做功已部分在上游完成；匿名来源按三倍还原工时起算（论文 §2.3 责任者系数）',en:'A signed author or organization means some calibration work was done upstream; anonymous sources count from 3× restoration work (paper §2.3 responsibility coefficient)'},
+qStopT:{zh:'想停下来的时候，能停下来吗？',en:'When you want to stop, can you?'},
+qStopH:{zh:'指不被自动播放、刷新或提醒推着继续',en:'Not being pushed on by autoplay, refresh or alerts'},
+qCheckT:{zh:'采信／采用过的内容，核查过来源或原文的比例',en:'Share of adopted content whose source or original you verified'},
+qCheckH:{zh:'「采信」指把它当真、据此形成判断或行动（引用、转发、下单、写进自己的东西）',en:'"Adopted" means taken as true or acted on (quoting, sharing, ordering, writing into your own work)'},
+qDebtT:{zh:'有没有未核查的内容，被用到了后面的判断或行动里？',en:'Did unchecked content get used in later judgments or actions?'},
+qDebtH:{zh:'例如：转发了一条没核实的信息、按 AI 给的数字做了决定、看了测评就下单',en:'E.g. shared unverified info, decided by an AI-given number, ordered after a review'},
+qSubT:{zh:'本周的使用强度更接近哪种？',en:'Which intensity was closest?'},
+qSubH:{zh:'决定生成量档位与命题密度（轻 10／中 20／重 30 次有效交互每时；每次采信的回复按 3 个命题计）',en:'Sets the generation tier and proposition density (10/20/30 adopted interactions per hour; each adopted reply counts 3 propositions)'},
+sStart:{zh:'本周问卷',en:'This week\'s survey'},
+sIntro:{zh:'回顾最近一周的媒介使用。只报告这一周的情况，不评价你是什么样的人。<br>记不清就选「说不清」——它是有效答案；纯娱乐没有采信内容的场景，如实勾选即可，不会因此算差。',en:'Review the past week of media use. Report only this week; this is not a judgment of who you are.<br>Pick "unclear" when unsure — it is a valid answer; honest checks for pure entertainment never count against you.'},
+sBegin:{zh:'开始',en:'Begin'},
+sGoTrack:{zh:'本周填过？',en:'Already filled this week?'},
+sGoTrackBtn:{zh:'去跟踪页查看',en:'Go to Track'},
+sStep:{zh:'第',en:'Step '},sStepOf:{zh:'步／共',en:' of '},sSteps:{zh:'步',en:' steps'},
+sWeekH:{zh:'选择要回顾的一周',en:'Choose the week to review'},
+sWeekSub:{zh:'建议在每周日晚上或周一早上填写，回顾刚过去的一周。同一周重复保存会覆盖旧记录。',en:'Best filled Sunday evening or Monday morning. Re-saving the same week overwrites it.'},
+sThisWeek:{zh:'本周',en:'this week'},
+sWeekExist:{zh:'这一周已有记录。',en:'A record already exists for this week.'},
+sLoadEdit:{zh:'载入并修改',en:'Load & edit'},
+sWeekExist2:{zh:'，或者继续重填、保存时覆盖。',en:', or refill and overwrite on save.'},
+sNext:{zh:'下一步',en:'Next'},sBack:{zh:'上一步',en:'Back'},
+sSelH:{zh:'本周你用过哪些场景？',en:'Which scenarios did you use this week?'},
+sSelSub:{zh:'可多选，按实际使用方式归类（例如 B 站：从推荐流刷进去算短视频，搜出来完整看算长视频）。',en:'Multiple choice; classify by actual use (e.g. Bilibili: from the feed = short video; searched and watched in full = long video).'},
+sSelNext:{zh:'下一步（已选',en:'Next ('},sSelNext2:{zh:'个）',en:' selected)'},
+sScStep:{zh:'场景',en:'Scenario '},sScOf:{zh:'／',en:' / '},
+sGenH:{zh:'整体情况',en:'Overall'},
+sGenSub:{zh:'最后三个问题，关于这一周的整体情况。',en:'Three final questions about the week as a whole.'},
+qCT:{zh:'本周额外花在核实信息上的时间',en:'Extra time spent verifying information this week'},
+qCTH:{zh:'查原文、对照来源、复核数字等，不含正常浏览',en:'Checking originals, comparing sources, re-computing figures; excludes normal browsing'},
+qUnT:{zh:'本周有没有「想停停不下来」的经历',en:'Any "couldn\'t stop" experiences this week?'},
+qUnH:{zh:'比原计划明显多用了的场景',en:'Scenarios used clearly more than planned'},
+qInT:{zh:'总体上，本周的信息使用是按自己的意图进行的吗',en:'Overall, did this week\'s information use follow your intent?'},
+sGenNext:{zh:'下一个场景',en:'Next scenario'},sGenFinish:{zh:'整体问题',en:'Overall questions'},
+sGenerate:{zh:'生成本周结果',en:'Generate this week\'s result'},
+toastUnfinished:{zh:'这一场景还有问题未回答（每题都可以选「说不清」）',en:'Some questions unanswered (every question accepts "unclear")'},
+toastGenUnfinished:{zh:'整体问题还没有答完',en:'Overall questions not finished'},
+toastAnyUnfinished:{zh:'有场景的问题没有答完',en:'Some scenario questions not finished'},
+toastSaved:{zh:'已保存本周记录',en:'Weekly record saved'},
+rTitle:{zh:'本周结果',en:'This Week\'s Result'},
+rEmptyH:{zh:'还没有结果',en:'No result yet'},
+rEmptyP:{zh:'完成一次问卷后，这里会生成本周的场景状态、速写与下一步动作。',en:'Complete a survey and the weekly scenario states, sketch and next action will appear here.'},
+rGoSurvey:{zh:'开始本周问卷',en:'Start this week\'s survey'},
+rKpiUse:{zh:'使用总时长（',en:'Total use ('},rKpiUse2:{zh:' 个场景）',en:' scenarios)'},
+rKpiAudit:{zh:'待审工时估算（',en:'Audit-hours estimate ('},rKpiAudit2:{zh:'）',en:')'},
+rKpiCheck:{zh:'额外核查投入（自报）',en:'Extra verification (self-reported)'},
+rHours:{zh:'小时',en:'hours'},rHShort:{zh:'小时',en:'h'},
+rWeekly:{zh:'本周总判读：',en:'Weekly reading: '},
+rRatio:{zh:'待审／使用 ≈ ',en:'audit/use ≈ '},
+rEstimate:{zh:'（情景估算）',en:' (scenario estimate)'},
+rExceed:{zh:'超出同步边界',en:'Beyond sync boundary'},
+rExceedLine:{zh:'：该场景每小时到达的内容，认真过一遍约需 ',en:': one hour of arrival in this scenario needs about '},
+rExceedTwo:{zh:'（通读 ',en:' (reading '},rExceedTwo2:{zh:'× ＋ 核摊 ',en:'× + verification '},rExceedTwo3:{zh:'×，两摊合计）',en:'×, two components)'},
+rWithin:{zh:'到达在同步能力以内（情景估算）',en:'Arrival within sync capacity (scenario estimate)'},
+rNear:{zh:'到达与同步审计大体相当（≈1）',en:'Arrival roughly equals sync auditing (≈1)'},
+rGap:{zh:'其中约 ',en:'About '},rGap2:{zh:' 小时落在使用窗口之外——这部分要么被跳过，要么递延为欠账。',en:' h fall outside the usage window — skipped or deferred as debt.'},
+rBasis:{zh:'状态依据（点开可查）',en:'Basis (click to expand)'},
+rBHours:{zh:'时长：',en:'Time: '},rBStop:{zh:'想停能停：',en:'Can stop: '},rBCheck:{zh:'核查比例：',en:'Verified: '},rBDebt:{zh:'未核内容去向：',en:'Unchecked content: '},
+rBLam:{zh:'参数：λ＝',en:'Parameter: λ='},rBLam2:{zh:'（',en:' ('},rBLam3:{zh:'）· ',en:') · '},
+rBLamTwo:{zh:' · 通读 ',en:' · reading '},rBLamTwo2:{zh:' ＋ 核摊 ',en:' + verification '},
+rUse:{zh:'使用',en:'Use'},rAudit:{zh:'待审',en:'Audit'},
+rWeekLine:{zh:'本周 ',en:'This week '},rWeekLine2:{zh:'（约 ',en:' (about '},rWeekLine3:{zh:' 小时）→ 待审约 ',en:' h) → audit about '},rWeekLine4:{zh:' 小时。',en:' h.'},
+rSketchH:{zh:'本周速写',en:'Weekly sketch'},
+rNextH:{zh:'下一步，只做一件',en:'Next: do just one thing'},
+rCmpH:{zh:'与上周比较',en:'Compared with last week'},
+rCmpNote:{zh:'按序数读：箭头只表示档位升降，不计算变化率。',en:'Read ordinally: arrows mark tier moves, not rates of change.'},
+s1:{zh:'本周共使用 ',en:'Used '},s1b:{zh:' 个场景，约 ',en:' scenarios, about '},s1c:{zh:' 小时；全部内容认真过一遍约需 ',en:' h; working through everything needs about '},s1d:{zh:' 小时（情景估算，区间 ',en:' h (scenario estimate, range '},s1e:{zh:'）。',en:').'},
+s2a:{zh:'待审压力最大的是「',en:'Highest audit pressure: "'},s2b:{zh:'」：使用约 ',en:'", used about '},s2c:{zh:' 小时，对应待审约 ',en:' h, audit about '},s2d:{zh:' 小时。',en:' h.'},
+s3down:{zh:'有未核内容已进入下游的判断或行动（',en:'Unchecked content entered downstream judgments or actions ('},s3down2:{zh:'），建议优先回查。',en:'), review those first.'},
+s3acc:{zh:' 个场景在积累未核内容（采信多、核查少，或停不下来）。',en:' scenario(s) accumulating unchecked content.'},
+s3sync:{zh:'各场景的采信与核查大体同步。',en:'Adoption and checking largely in step.'},
+s4a:{zh:'本周有「想停停不下来」的经历（',en:'"Couldn\'t stop" experiences this week ('},s4b:{zh:'）。',en:').'},
+s5pre:{zh:'总体上，本周的信息使用',en:'Overall, this week\'s information use '},
+s5yes:{zh:'基本按自己的意图进行',en:'mostly followed intent'},s5part:{zh:'部分按意图进行',en:'partly followed intent'},s5off:{zh:'明显偏离意图',en:'largely departed from intent'},s5unc:{zh:'情况说不清',en:'is unclear'},
+s6a:{zh:'本周额外花在核实信息上的时间：约 ',en:'Extra verification time this week: about '},s6b:{zh:' 小时。',en:' h.'},
+n1a:{zh:'先回查已被使用的未核内容。本周「',en:'First review the unchecked content already in use. This week "'},n1b:{zh:'」有未核查的内容进入了影响较大的判断或行动——先找出它们，检查是否需要修正、补充来源或撤回。',en:'" had unchecked content entering consequential judgments or actions — find them and check whether to correct, re-source or retract.'},
+n2a:{zh:'在「',en:'In "'},n2b:{zh:'」先恢复停止信号：关闭自动播放、改为手动刷新或分批查看。这是本周待审压力最大的、停不下来的场景。',en:'" restore stop signals first: disable autoplay, switch to manual refresh or batch viewing. This is the highest-pressure unstoppable scenario this week.'},
+n3:{zh:'为本周采信过的最重要的一条结论补一次核查：找到原文、原始数据，或一个真正独立的来源。',en:'Re-verify the single most important claim you adopted this week: find the original, the raw data, or a genuinely independent source.'},
+n4:{zh:'下周给自己安排一个固定的核查时段（哪怕 15 分钟），专门消化递延的待审内容。',en:'Schedule a fixed verification slot next week (even 15 minutes) to digest deferred items.'},
+n5:{zh:'本周的回答大多是「说不清」——先不下结论，下周继续记录。',en:'Most answers were "unclear" — draw no conclusions yet; keep recording next week.'},
+n6:{zh:'保持本周的核查节奏，下周继续记录，观察各场景状态的变化。',en:'Keep this week\'s verification rhythm; keep recording and watch scenario states change.'},
+wfTitle:{zh:'本周待审工时瀑布图',en:'This week\'s audit-hours waterfall'},
+wfSub:{zh:'各场景依次累加到合计；蓝色虚线＝使用总时长——柱顶超过虚线的部分，就是超出同步审计能力的欠账。',en:'Scenarios accumulate into the total; the dashed line = total use — the bar above the line is the debt beyond sync capacity.'},
+wfTotal:{zh:'合计',en:'Total'},wfRefLab:{zh:'使用总时长 ',en:'total use '},
+wkTitle:{zh:'逐周总览',en:'Week-by-week overview'},
+wkSub:{zh:'柱高＝该周待审工时合计（按场景堆积，颜色＝该场景当周状态）；蓝色虚线＝该周使用总时长；柱下色块与文字＝该周总判读。看颜色与高度的方向变化，不读精确数值。',en:'Bar height = weekly audit total (stacked by scenario, color = weekly state); dashed line = total use; label below = weekly reading. Watch direction of color and height, not exact values.'},
+tEmptyH:{zh:'还没有周记录',en:'No weekly records yet'},
+tEmptyP:{zh:'完成一次问卷后，这里会出现每周记录与跨周对照。',en:'Complete a survey and weekly records with cross-week comparison will appear here.'},
+tRowLine:{zh:' 个场景 · 使用约 ',en:' scenarios · use about '},tRowLine2:{zh:' 小时 · 待审约 ',en:' h · audit about '},tRowLine3:{zh:' 小时 · 总判读 ',en:' h · reading '},
+tView:{zh:'查看',en:'View'},tEdit:{zh:'修改',en:'Edit'},
+tMatrixH:{zh:'跨周对照',en:'Cross-week matrix'},
+tUnused:{zh:'未使用',en:'unused'},
+tMatrixSub:{zh:'符号是状态，不是分数；观察方向，不排名次。',en:'Symbols are states, not scores; watch direction, not ranking.'},
+dTitle:{zh:'数据',en:'Data'},
+dSub:{zh:'条周记录，保存在本机浏览器（localStorage），不上传、无账号。清理浏览器数据会删除记录，请定期导出备份。当前占用约 ',en:' weekly records stored in this browser (localStorage), no upload, no account. Clearing browser data deletes them; export backups regularly. Current size about '},
+dExport:{zh:'导出 JSON',en:'Export JSON'},dImport:{zh:'导入 JSON',en:'Import JSON'},dClear:{zh:'清空全部',en:'Clear all'},
+dRules:{zh:'规则版本',en:'rules version'},
+dClear1:{zh:'确定要清空全部周记录吗？此操作不可恢复。',en:'Clear all weekly records? This cannot be undone.'},
+dClear2:{zh:'再次确认：真的要删除全部记录？建议先导出备份。',en:'Confirm again: really delete all records? Export a backup first.'},
+toastCleared:{zh:'已清空',en:'Cleared'},
+dExported:{zh:'已导出 ',en:'Exported '},dExported2:{zh:' 条周记录',en:' weekly records'},
+dImported:{zh:'导入完成：更新／新增 ',en:'Import done: updated/added '},dImported2:{zh:' 周',en:' weeks'},dImported3:{zh:'，忽略 ',en:', ignored '},dImported4:{zh:' 条无效记录',en:' invalid records'},
+dImportFail:{zh:'导入失败：文件格式不正确',en:'Import failed: bad file format'},
+dMdExported:{zh:'已导出 ',en:'Exported '},dMdExported2:{zh:' —— 线上不记录你填写的任何信息，请妥善保存导出文件作为备份',en:' — nothing you enter is recorded online; keep the exported file as a backup'},
+BOUNDARY:{zh:'读法与边界：以上为自报记录＋明示情景参数下的估算——量级保留，方向优先。场景之间不合成统一数值轴，不比较精确倍数；周总判读（层流型／过渡型／湍流型）按债务轨迹作序数分型，不是测得的数值；"说不清"保持为"说不清"；漏记不等于零使用。本软件不测量认知能力，不构成任何心理、健康或成瘾判断；数据仅保存在本机浏览器。模糊的正确好过精确的错误。',
+en:'How to read: the above are self-reports plus estimates under explicit scenario parameters — keep magnitudes, prefer direction. Scenarios are not merged onto one numeric axis; the weekly reading (laminar / transitional / turbulent) is an ordinal typing by debt trajectory, not a measured value; "unclear" stays "unclear"; missing records are not zero. This software measures no cognitive ability and makes no psychological, health or addiction judgments; data stays in this browser. Better vaguely right than exactly wrong.'},
+DISCLAIMER:{
+zh:'<ol><li><b>本软件不是医疗器械或医疗软件</b>，不提供任何医学测量、诊断、治疗或健康建议；也不是心理测验，不做任何心理、精神或成瘾状态的判定。</li><li><b>本软件的考察视角是媒介使用中的认知债务积累</b>：记录各媒介场景的信息到达压力与核查安排之间的关系，输出为个人自报记录与情景估算，属于自我观察工具。</li><li><b>所有数值均为明示参数下的费米估算（情景估算），不是精确测量。</b>估算参数、判定规则与数据格式可能随软件版本更新或研究进展而调整，历史记录不保证跨版本可比，结果可能变化。</li><li>问卷为自报数据，存在回忆与表述偏差；漏记不是零使用；"说不清"保持为"说不清"，不会折算为零或良好。</li><li>输出只给方向性提示与下一步动作，不构成对认知能力、心理状态或健康状况的任何判断。如有相关困扰，请咨询专业医疗机构或专业人士。</li><li>数据全部保存在本设备浏览器本地：不上传、不收集、无账号。清理浏览器数据会删除记录，请定期导出备份。</li></ol>',
+en:'<ol><li><b>This software is not a medical device or medical software</b> and provides no medical measurement, diagnosis, treatment or health advice; nor is it a psychological test — it makes no judgments about psychological, psychiatric or addiction status.</li><li><b>Its perspective is cognitive-debt accumulation in media use</b>: recording the relation between information-arrival pressure and verification arrangements across media scenarios, output as personal self-reports and scenario estimates — a self-observation tool.</li><li><b>All numbers are Fermi estimates under explicit parameters, not measurements.</b> Parameters, rules and data formats may change with versions or research; historical records are not guaranteed comparable across versions.</li><li>The survey is self-reported and subject to recall and wording bias; missing records are not zero use; "unclear" stays "unclear" and is never converted to zero or good.</li><li>Outputs are directional hints and next actions only — no judgments of cognitive ability, psychological state or health. For concerns, consult qualified professionals.</li><li>Data stays in this browser: no upload, no collection, no account. Clearing browser data deletes records; export backups regularly.</li></ol>'}
+};
+function disclaimerHTML(){
+  return I18N.DISCLAIMER[lang]+'<p class="gatesig">'+lb(RIGHTS)+' · '+lb(APP_NAME)+' '+APP_VERSION+'。'+(lang==='zh'?'继续使用即表示您已阅读并理解以上内容。':'By continuing you confirm you have read and understood the above.')+'</p>';
+}
+/* ===== 周总判读与图表 ===== */
+/* 周总判读：按论文 §7 债务轨迹分型作序数判断——
+   任一场景"已入下游"→湍流型；否则"说不清"过半→说不清；
+   任一场景"在积累"→过渡型；否则层流型。比值只作辅助数字，不参与分型。 */
+function weeklyType(d){
+  if(!d.rows.length)return 'unclear';
+  if(d.rows.some(r=>r.status==='downstream'))return 'turb';
+  const u=d.rows.filter(r=>r.status==='unclear').length;
+  if(u>=Math.ceil(d.rows.length/2))return 'unclear';
+  if(d.rows.some(r=>r.status==='accumulating'))return 'trans';
+  return 'lami';
+}
+function waterfallHTML(d){
+  const rows=d.rows;
+  if(!rows.length)return '';
+  const total=d.tot.auditMid;
+  const maxV=Math.max(total,d.tot.hrs,1)*1.08;
+  const n=rows.length,colW=100/(n+1);
+  let cum=0,bars='',labels='';
+  rows.forEach((r,i)=>{
+    const b=cum/maxV*100,h=r.audit.mid/maxV*100;
+    bars+='<div class="wf-bar" style="left:'+(i*colW+colW*.2)+'%;width:'+(colW*.6)+'%;bottom:'+b+'%;height:'+h+'%;background:'+STATUS_COLOR[r.status]+'"><span class="wf-val">'+fmtH(r.audit.mid)+'</span></div>';
+    if(i<n-1)bars+='<div class="wf-conn" style="left:'+(i*colW+colW*.8)+'%;width:'+(colW*.4)+'%;bottom:'+((cum+r.audit.mid)/maxV*100)+'%"></div>';
+    cum+=r.audit.mid;
+    labels+='<div class="wf-lab" style="width:'+colW+'%"><i style="background:'+STATUS_COLOR[r.status]+'"></i>'+lb(SHORT[r.key]||r.name)+'</div>';
+  });
+  const wt=weeklyType(d),wm=WTYPE_META[wt];
+  bars+='<div class="wf-bar" style="left:'+(n*colW+colW*.2)+'%;width:'+(colW*.6)+'%;bottom:0;height:'+(total/maxV*100)+'%;background:'+wm.color+'"><span class="wf-val">'+fmtH(total)+'</span></div>';
+  labels+='<div class="wf-lab" style="width:'+colW+'%"><i style="background:'+wm.color+'"></i>'+t('wfTotal')+'</div>';
+  const ref='<div class="wf-ref" style="bottom:'+(d.tot.hrs/maxV*100)+'%"><span>'+t('wfRefLab')+fmtH(d.tot.hrs)+'h</span></div>';
+  const legend='<div class="legend">'+Object.keys(STATUS_META).map(k=>'<span><i class="sw" style="background:'+STATUS_COLOR[k]+'"></i>'+lb(STATUS_META[k].label)+'</span>').join('')+'</div>';
+  return '<div class="wf-title">'+t('wfTitle')+'</div>'+
+  '<p class="sub" style="margin:.1em 0 .2em">'+t('wfSub')+'</p>'+
+  '<div class="wf"><div class="wf-plot">'+bars+ref+'</div><div class="wf-labs">'+labels+'</div></div>'+legend;
+}
+function weeksChartHTML(){
+  if(store.records.length<2)return '';
+  const weeks=store.records.map(r=>({r,d:deriveRecord(r)}));
+  const maxV=Math.max(1,...weeks.map(w=>Math.max(w.d.tot.auditMid,w.d.tot.hrs)))*1.08;
+  const cw=100/weeks.length;
+  const idx={};SCENARIOS.forEach((s,i)=>{idx[s.key]=i;});
+  let cols='',labs='';
+  weeks.forEach((w,i)=>{
+    const rows=w.d.rows.slice().sort((a,b)=>idx[a.key]-idx[b.key]);
+    let cum=0,segs='';
+    rows.forEach(r=>{
+      segs+='<div class="wk-seg" style="bottom:'+(cum/maxV*100)+'%;height:'+(r.audit.mid/maxV*100)+'%;background:'+STATUS_COLOR[r.status]+'" title="'+r.name+'：'+lb(STATUS_META[r.status].label)+'"></div>';
+      cum+=r.audit.mid;
+    });
+    const wt=weeklyType(w.d),wm=WTYPE_META[wt];
+    cols+='<div class="wk-col" style="left:'+(i*cw+cw*.22)+'%;width:'+(cw*.56)+'%">'+segs+
+    '<div class="wk-ref" style="bottom:'+(w.d.tot.hrs/maxV*100)+'%" title="'+t('wfRefLab')+fmtH(w.d.tot.hrs)+'h"></div>'+
+    '<div class="wk-val" style="color:'+wm.color+'">'+fmtH(w.d.tot.auditMid)+'</div></div>';
+    labs+='<div class="wf-lab" style="width:'+cw+'%"><i style="background:'+wm.color+'"></i>'+lb(wm.label)+'<br><span>'+wkShort(w.r.weekMonday)+' · '+fmtH(w.d.tot.hrs)+'h</span></div>';
+  });
+  const legend='<div class="legend">'+Object.keys(STATUS_META).map(k=>'<span><i class="sw" style="background:'+STATUS_COLOR[k]+'"></i>'+lb(STATUS_META[k].label)+'</span>').join('')+
+  '<span><i class="sw" style="height:0;border-top:2px dashed var(--acc);background:none"></i>'+t('wfRefLab').replace(/ $/,'')+'</span></div>';
+  let divLines='';
+  for(let i=0;i<weeks.length-1;i++){
+    if(weeks[i].d.isV1!==weeks[i+1].d.isV1){
+      const x=(i+1)*cw;
+      divLines+='<div style="position:absolute;top:0;bottom:0;left:'+x+'%;width:0;border-left:2px dashed var(--dim);z-index:6"></div>'+
+      '<span style="position:absolute;top:2px;left:'+(x+0.4)+'%;font-size:10px;color:var(--dim);background:rgba(244,245,247,.9);padding:0 3px;z-index:7" title="'+(lang==='zh'?'此线两侧规则版本不同，柱高不直接可比':'different rules versions on the two sides; bar heights not directly comparable')+'">v'+(weeks[i].d.isV1?'1|2':'2|1')+'</span>';
+    }
+  }
+  return '<div class="card"><h3>'+t('wkTitle')+'</h3>'+
+  '<div class="tw"><div style="min-width:440px">'+
+  '<div class="wf"><div class="wf-plot" style="height:200px">'+cols+divLines+'</div><div class="wf-labs">'+labs+'</div></div>'+legend+
+  '</div></div>'+
+  '<p class="sub">'+t('wkSub')+'</p></div>';
+}
+/* ===== 工具 ===== */
+const $=s=>document.querySelector(s);
+function labelOf(opts,v){const o=opts.find(x=>x.v===v);return o?lb(o.label):'—';}
+function fmtH(h){if(!isFinite(h))return '—';if(h>=10)return String(Math.round(h));const r=Math.round(h*10)/10;return r%1===0?String(r):r.toFixed(1);}
+function mondayOf(d){const x=new Date(d.getFullYear(),d.getMonth(),d.getDate());x.setDate(x.getDate()-((x.getDay()+6)%7));return x;}
+function parseMonday(s){return new Date(s+'T00:00:00');}
+function isoDate(d){const p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());}
+function fmtDate(d){return lang==='zh'?((d.getMonth()+1)+'月'+d.getDate()+'日'):((d.getMonth()+1)+'/'+d.getDate());}
+function weekRange(mon){const end=new Date(mon);end.setDate(end.getDate()+6);return fmtDate(mon)+'–'+fmtDate(end);}
+function isoWeekNum(mon){const t=new Date(mon);t.setDate(t.getDate()+3);const y=t.getFullYear();const j4=new Date(y,0,4);const dj=(j4.getDay()+6)%7;return 1+Math.round(((t-j4)/86400000-3+dj)/7);}
+function isoWeekOf(mon){const t=new Date(mon);t.setDate(t.getDate()+3);return lang==='zh'?(t.getFullYear()+' 年第 '+isoWeekNum(mon)+' 周'):('W'+isoWeekNum(mon)+' '+t.getFullYear());}
+function wkShort(w){return lang==='zh'?('第'+isoWeekNum(parseMonday(w))+'周'):('W'+isoWeekNum(parseMonday(w)));}
+function recentMondays(n){const cur=mondayOf(new Date());const out=[];for(let i=n-1;i>=0;i--){const d=new Date(cur);d.setDate(d.getDate()-7*i);out.push(d);}return out;}
+function zoneCls(z){if(z==='lami')return 'z-ok';if(z.indexOf('turb')===0)return 'z-bad';return 'z-mid';}
+let toastTimer=null;
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2600);}
+/* ===== 存储（独立键 cognoweek_v2，与旧键 cognoweek_v1 隔离）===== */
+const LS_KEY='cognoweek_v2';
+let memStore=null;
+function loadStore(){
+  try{const s=localStorage.getItem(LS_KEY);if(!s)return{records:[]};const o=JSON.parse(s);return{records:Array.isArray(o.records)?o.records:[]};}
+  catch(e){if(!memStore)memStore={records:[]};return memStore;}
+}
+function saveStore(st){
+  try{localStorage.setItem(LS_KEY,JSON.stringify({app:'cognoweek',schemaVersion:1,records:st.records}));}
+  catch(e){memStore=st;}
+}
+let store=loadStore();
+/* ===== 推导（rulesVersion=2：两摊公式；v1 记录按 v1 快照解读）===== */
+function lamV2(key,a,lg){
+  const rl=lg||lang;
+  const L=LANG_RATE[rl];
+  if(key==='shortvideo'){
+    const tr=CAL.svTrans[rl]||200;
+    const ref=L.ref[a.ctype]||L.ref.natural;
+    const co=CAL.respCoeff[a.resp]||CAL.respCoeff.signed;
+    const out={};
+    ['lo','mid','hi'].forEach(k=>{
+      const n=CAL.svPerHour[k];
+      out[k]=+((n*tr+n*CAL.svProps*ref*co)/L.hourly).toFixed(4);
+    });
+    const m=CAL.svPerHour.mid;
+    out.wa=+((m*tr)/L.hourly).toFixed(4);
+    out.wb=+((m*CAL.svProps*ref*co)/L.hourly).toFixed(4);
+    return out;
+  }
+  if(key==='ai'){
+    const sub=a.subtype||'mid';
+    const wa=CAL.aiReadComp[sub];
+    const ref=L.ref[a.ctype]||L.ref.natural;
+    const co=CAL.respCoeff[a.resp]||CAL.respCoeff.signed;
+    const base=CAL.aiProps[sub]*ref*co/L.hourly;
+    return {lo:+(wa*0.8+base*0.5).toFixed(4),mid:+(wa+base).toFixed(4),hi:+(wa*1.25+base*2).toFixed(4),wa:+wa.toFixed(4),wb:+base.toFixed(4)};
+  }
+  return null;
+}
+function lambdaOf(key,a,isV1,lg){
+  const s=SC[key];
+  if(isV1){
+    if(key==='shortvideo')return V1_LAM.shortvideo[a.subtype]||V1_LAM.shortvideo.talk;
+    if(key==='ai')return V1_LAM.ai[a.subtype]||V1_LAM.ai.mid;
+  }else{
+    const f=lamV2(key,a,lg);
+    if(f)return f;
+  }
+  if(s.sub){const o=s.sub.find(x=>x.v===a.subtype)||s.sub[0];return o.lam||{lo:1,mid:1,hi:1};}
+  return s.lam;
+}
+function scenarioStatus(a){
+  const u=[a.stop,a.check,a.debt].filter(v=>v==='unclear').length;
+  if(a.debt==='major')return 'downstream';
+  if(u>=2)return 'unclear';
+  if(a.debt==='some'||a.stop==='no'||a.check==='never')return 'accumulating';
+  if(a.check==='no-adopt')return 'noadopt';
+  return 'steady';
+}
+function deriveRecord(rec){
+  const isV1=(rec.rulesVersion||1)<2;
+  const recLang=(!isV1&&rec.lang)?rec.lang:lang; // v2 记录按作答语言解读
+  const rows=SCENARIOS.filter(s=>rec.scenarios[s.key]).map(s=>{
+    const a=rec.scenarios[s.key];
+    const hrs=HOURS_MID[a.hours]*7;
+    const lam=lambdaOf(s.key,a,isV1,recLang);
+    const audit={lo:hrs*lam.lo,mid:hrs*lam.mid,hi:hrs*lam.hi};
+    return{key:s.key,name:lb(s.name),zone:s.zone,ex:lb(s.ex),hrs,hrsLabel:lb(HOURS_LABEL[a.hours]||{zh:'—',en:'—'}),lam,audit,status:scenarioStatus(a),a,src:lb(s.src),two:!!s.formula&&!isV1};
+  });
+  rows.sort((x,y)=>y.audit.mid-x.audit.mid);
+  const tot={hrs:rows.reduce((t,r)=>t+r.hrs,0),auditLo:rows.reduce((t,r)=>t+r.audit.lo,0),auditMid:rows.reduce((t,r)=>t+r.audit.mid,0),auditHi:rows.reduce((t,r)=>t+r.audit.hi,0)};
+  const checkT=CHECKTIME_OPTS.find(o=>o.v===rec.general.checktime);
+  const acc=rows.filter(r=>r.status==='accumulating');
+  const down=rows.filter(r=>r.status==='downstream');
+  return{rows,tot,checkT,acc,down,isV1};
+}
+function nextAction(rec,d){
+  if(d.down.length)return t('n1a')+d.down[0].name+t('n1b');
+  const ns=d.rows.filter(r=>r.a.stop==='no')[0];
+  if(ns)return t('n2a')+ns.name+t('n2b');
+  const nv=d.rows.find(r=>r.a.check==='never');
+  if(nv)return t('n3');
+  if(rec.general.checktime==='none')return t('n4');
+  if(d.rows.length&&d.rows.every(r=>['unclear','noadopt'].indexOf(r.status)>=0))return t('n5');
+  return t('n6');
+}
+function summaryLines(rec,d){
+  const L=[];
+  L.push(t('s1')+d.rows.length+t('s1b')+fmtH(d.tot.hrs)+t('s1c')+fmtH(d.tot.auditMid)+t('s1d')+fmtH(d.tot.auditLo)+'–'+fmtH(d.tot.auditHi)+t('s1e'));
+  if(d.rows[0])L.push(t('s2a')+d.rows[0].name+t('s2b')+fmtH(d.rows[0].hrs)+t('s2c')+fmtH(d.rows[0].audit.mid)+t('s2d'));
+  if(d.down.length)L.push(t('s3down')+d.down.map(r=>r.name).join(lang==='zh'?'、':', ')+t('s3down2'));
+  else if(d.acc.length)L.push(d.acc.length+t('s3acc'));
+  else if(d.rows.length)L.push(t('s3sync'));
+  const g=rec.general;
+  if(g.unstoppable&&g.unstoppable!=='no')L.push(t('s4a')+labelOf(UNSTOP_OPTS,g.unstoppable)+t('s4b'));
+  const imap={yes:t('s5yes'),part:t('s5part'),off:t('s5off'),unclear:t('s5unc')};
+  L.push(t('s5pre')+(imap[g.intention]||t('s5unc'))+(lang==='zh'?'。':'.'));
+  L.push(t('s6a')+(d.checkT?fmtH(d.checkT.mid):'0')+t('s6b'));
+  return L;
+}
+function comparisonLines(prev,cur){
+  const lines=[];
+  const dPrev=deriveRecord(prev);
+  lines.push(lang==='zh'?'使用总时长：约 ':'Total use: about '+fmtH(dPrev.tot.hrs)+(lang==='zh'?' → 约 ':' → about ')+fmtH(deriveRecord(cur).tot.hrs)+(lang==='zh'?' 小时':' h'));
+  SCENARIOS.forEach(s=>{
+    const k=s.key,p=prev.scenarios[k],c=cur.scenarios[k];
+    if(p&&c){
+      const pi=HOURS_OPTS.findIndex(o=>o.v===p.hours),ci=HOURS_OPTS.findIndex(o=>o.v===c.hours);
+      const arr=ci>pi?' ↑':ci<pi?' ↓':' →';
+      const ps=lb(STATUS_META[scenarioStatus(p)].label),cs=lb(STATUS_META[scenarioStatus(c)].label);
+      lines.push(lb(s.name)+'：'+lb(HOURS_LABEL[p.hours]||{zh:'—',en:'—'})+' → '+lb(HOURS_LABEL[c.hours]||{zh:'—',en:'—'})+arr+'；'+(ps===cs?ps:ps+' → '+cs));
+    }else if(c){lines.push((lang==='zh'?'新增：':'New: ')+lb(s.name)+'（'+lb(HOURS_LABEL[c.hours]||{zh:'—',en:'—'})+'）');}
+    else if(p){lines.push((lang==='zh'?'本周未用：':'Unused this week: ')+lb(s.name));}
+  });
+  return lines;
+}
+/* ===== 问卷向导 ===== */
+let draft=null,wiz={step:0},currentRecord=null,curPage='method';
+function totalSteps(){return draft?draft.selected.length+3:3;}
+function newDraft(){return{weekMonday:isoDate(mondayOf(new Date())),selected:[],answers:{},general:{checktime:null,unstoppable:null,intention:null}};}
+function startSurvey(prefill){
+  if(prefill){
+    draft={weekMonday:prefill.weekMonday,selected:Object.keys(prefill.scenarios),
+      answers:JSON.parse(JSON.stringify(prefill.scenarios)),general:Object.assign({},prefill.general)};
+  }else{draft=newDraft();}
+  wiz.step=0;go('survey');
+}
+function chipRow(k,q,opts,cur){
+  return '<div class="chips"'+(k?' data-k="'+k+'"':'')+' data-q="'+q+'">'+
+    opts.map(o=>'<button type="button" class="chip'+(cur===o.v?' sel':'')+'" data-v="'+o.v+'">'+lb(o.label)+'</button>').join('')+'</div>';
+}
+function chipRowG(q,opts,cur){return chipRow(null,q,opts,cur);}
+function qBlock(tt,h,html){return '<div class="qb"><div class="qt">'+tt+'</div>'+(h?'<div class="qh">'+h+'</div>':'')+html+'</div>';}
+function scenarioDone(k){const a=draft.answers[k];const s=SC[k];const base=!!(a&&a.hours&&a.stop&&a.check&&a.debt);if(!base)return false;if(s.formula&&!a.ctype)return false;if(s.formula&&!a.resp)return false;if(s.sub&&!a.subtype)return false;return true;}
+function renderSurvey(){
+  const c=$('#page-survey');
+  if(!draft){
+    const has=store.records.length>0;
+    c.innerHTML='<div class="card center"><h2>'+t('sStart')+'</h2>'+
+    '<p class="sub">'+t('sIntro')+'</p>'+
+    '<button class="btn" id="btn-start">'+t('sBegin')+'</button>'+
+    (has?'<p class="sub" style="margin-top:12px">'+t('sGoTrack')+'<button class="linkbtn" id="btn-gotrack">'+t('sGoTrackBtn')+'</button></p>':'')+
+    '</div>';
+    $('#btn-start').onclick=()=>{draft=newDraft();wiz.step=0;renderSurvey();};
+    if(has)$('#btn-gotrack').onclick=()=>go('track');
+    return;
+  }
+  const N=draft.selected.length;
+  if(wiz.step===0)renderWeekStep();
+  else if(wiz.step===1)renderSelectStep();
+  else if(wiz.step>=2&&wiz.step<2+N)renderScenarioStep(wiz.step-2);
+  else renderGeneralStep();
+}
+function renderWeekStep(){
+  const c=$('#page-survey');
+  const curMonday=isoDate(mondayOf(new Date()));
+  const existing=store.records.find(r=>r.weekMonday===draft.weekMonday);
+  const opts=recentMondays(8).map(m=>{
+    const v=isoDate(m);
+    return '<option value="'+v+'"'+(v===draft.weekMonday?' selected':'')+'>'+isoWeekOf(m)+'（'+weekRange(m)+'）'+(v===curMonday?' · '+t('sThisWeek'):'')+'</option>';
+  }).join('');
+  c.innerHTML='<div class="card">'+
+  '<div class="stephead">'+t('sStep')+' 1 / '+totalSteps()+'</div>'+
+  '<h2>'+t('sWeekH')+'</h2>'+
+  '<p class="sub">'+t('sWeekSub')+'</p>'+
+  '<select id="weeksel" class="select">'+opts+'</select>'+
+  (existing?'<div class="note warn">'+t('sWeekExist')+'<button class="linkbtn" id="btn-load">'+t('sLoadEdit')+'</button>'+t('sWeekExist2')+'</div>':'')+
+  '<div class="navrow"><span></span><button class="btn" id="btn-next">'+t('sNext')+'</button></div></div>';
+  $('#weeksel').onchange=e=>{draft.weekMonday=e.target.value;renderSurvey();};
+  if(existing)$('#btn-load').onclick=()=>startSurvey(existing);
+  $('#btn-next').onclick=()=>{wiz.step=1;renderSurvey();window.scrollTo(0,0);};
+}
+function renderSelectStep(){
+  const c=$('#page-survey');
+  const cards=SCENARIOS.map(s=>{
+    const on=draft.selected.indexOf(s.key)>=0;
+    return '<button type="button" class="sccard'+(on?' on':'')+'" data-sc="'+s.key+'">'+
+    '<span class="scname">'+lb(s.name)+(on?' ✓':'')+'</span>'+
+    '<span class="badge '+zoneCls(s.zone)+'">'+lb(ZONE_LABEL[s.zone])+'</span>'+
+    '<span class="scex">'+lb(s.ex)+'</span></button>';
+  }).join('');
+  c.innerHTML='<div class="card">'+
+  '<div class="stephead">'+t('sStep')+' 2 / '+totalSteps()+'</div>'+
+  '<h2>'+t('sSelH')+'</h2>'+
+  '<p class="sub">'+t('sSelSub')+'</p>'+
+  '<div class="scgrid">'+cards+'</div>'+
+  '<div class="navrow"><button class="btn ghost" id="btn-back">'+t('sBack')+'</button>'+
+  '<button class="btn" id="btn-next"'+(draft.selected.length?'':' disabled')+'>'+t('sSelNext')+draft.selected.length+t('sSelNext2')+'</button></div></div>';
+  c.querySelectorAll('[data-sc]').forEach(b=>b.onclick=()=>{
+    const k=b.dataset.sc,i=draft.selected.indexOf(k);
+    if(i>=0)draft.selected.splice(i,1);else draft.selected.push(k);
+    renderSurvey();
+  });
+  $('#btn-back').onclick=()=>{wiz.step=0;renderSurvey();window.scrollTo(0,0);};
+  $('#btn-next').onclick=()=>{wiz.step=2;renderSurvey();window.scrollTo(0,0);};
+}
+function renderScenarioStep(i){
+  const c=$('#page-survey');
+  const key=draft.selected[i],s=SC[key];
+  let a=draft.answers[key];
+  if(!a)a=draft.answers[key]={hours:null,stop:null,check:null,debt:null,subtype:null,ctype:null,resp:null};
+  if(s.sub&&!a.subtype)a.subtype=s.sub[0].v;
+  let html='<div class="card">'+
+  '<div class="stephead">'+t('sStep')+' '+(i+3)+' / '+totalSteps()+' · '+t('sScStep')+(i+1)+t('sScOf')+draft.selected.length+'</div>'+
+  '<h2>'+lb(s.name)+' <span class="badge '+zoneCls(s.zone)+'">'+lb(ZONE_LABEL[s.zone])+'</span></h2>'+
+  '<p class="sub">'+lb(s.ex)+'</p>'+
+  qBlock(t('qHoursT'),t('qHoursH'),chipRow(key,'hours',HOURS_OPTS,a.hours));
+  if(s.formula){
+    html+=qBlock(t('qCtypeT'),t('qCtypeH'),chipRow(key,'ctype',CTYPE_OPTS,a.ctype));
+    html+=qBlock(t('qRespT'),t('qRespH'),chipRow(key,'resp',RESP_OPTS,a.resp));
+  }
+  if(s.sub){
+    html+=qBlock(t('qSubT'),t('qSubH'),chipRow(key,'subtype',s.sub,a.subtype));
+  }
+  html+=qBlock(t('qStopT'),t('qStopH'),chipRow(key,'stop',STOP_OPTS,a.stop));
+  html+=qBlock(t('qCheckT'),t('qCheckH'),chipRow(key,'check',CHECK_OPTS,a.check));
+  html+=qBlock(t('qDebtT'),t('qDebtH'),chipRow(key,'debt',DEBT_OPTS,a.debt));
+  html+='<div class="navrow"><button class="btn ghost" id="btn-back">'+t('sBack')+'</button><button class="btn" id="btn-next">'+(i===draft.selected.length-1?t('sGenFinish'):t('sGenNext'))+'</button></div></div>';
+  c.innerHTML=html;
+  $('#btn-back').onclick=()=>{wiz.step--;renderSurvey();window.scrollTo(0,0);};
+  $('#btn-next').onclick=()=>{
+    if(!scenarioDone(key)){toast(t('toastUnfinished'));return;}
+    wiz.step++;renderSurvey();window.scrollTo(0,0);
+  };
+}
+function renderGeneralStep(){
+  const c=$('#page-survey'),g=draft.general,N=draft.selected.length;
+  c.innerHTML='<div class="card">'+
+  '<div class="stephead">'+t('sStep')+' '+(N+3)+' / '+totalSteps()+'</div>'+
+  '<h2>'+t('sGenH')+'</h2>'+
+  '<p class="sub">'+t('sGenSub')+'</p>'+
+  qBlock(t('qCT'),t('qCTH'),chipRowG('checktime',CHECKTIME_OPTS,g.checktime))+
+  qBlock(t('qUnT'),t('qUnH'),chipRowG('unstoppable',UNSTOP_OPTS,g.unstoppable))+
+  qBlock(t('qInT'),'',chipRowG('intention',INTENT_OPTS,g.intention))+
+  '<div class="navrow"><button class="btn ghost" id="btn-back">'+t('sBack')+'</button><button class="btn" id="btn-save">'+t('sGenerate')+'</button></div></div>';
+  $('#btn-back').onclick=()=>{wiz.step--;renderSurvey();window.scrollTo(0,0);};
+  $('#btn-save').onclick=saveDraft;
+}
+function saveDraft(){
+  const g=draft.general;
+  if(!g.checktime||!g.unstoppable||!g.intention){toast(t('toastGenUnfinished'));return;}
+  for(const k of draft.selected){if(!scenarioDone(k)){toast(t('toastAnyUnfinished'));return;}}
+  const scenarios={};
+  draft.selected.forEach(k=>{const a=draft.answers[k];scenarios[k]={hours:a.hours,stop:a.stop,check:a.check,debt:a.debt};if(a.subtype)scenarios[k].subtype=a.subtype;if(SC[k].formula){scenarios[k].ctype=a.ctype;scenarios[k].resp=a.resp;}});
+  const rec={weekMonday:draft.weekMonday,finishedAt:new Date().toISOString(),rulesVersion:2,lang,scenarios,general:Object.assign({},g)};
+  const i=store.records.findIndex(r=>r.weekMonday===rec.weekMonday);
+  if(i>=0)store.records[i]=rec;else store.records.push(rec);
+  store.records.sort((a,b)=>a.weekMonday<b.weekMonday?-1:1);
+  saveStore(store);
+  currentRecord=rec;draft=null;
+  toast(t('toastSaved'));
+  go('result');
+}
+/* ===== 结果页 ===== */
+function renderResult(rec){
+  const c=$('#page-result');
+  if(!rec){
+    c.innerHTML='<div class="card empty"><h2>'+t('rEmptyH')+'</h2><p>'+t('rEmptyP')+'</p>'+
+    '<button class="btn" id="btn-go-survey">'+t('rGoSurvey')+'</button></div>';
+    $('#btn-go-survey').onclick=()=>startSurvey();
+    return;
+  }
+  const d=deriveRecord(rec);
+  const mon=parseMonday(rec.weekMonday);
+  const prev=store.records.filter(r=>r.weekMonday<rec.weekMonday).pop();
+  const ratio=(d.tot.auditMid/Math.max(0.1,d.tot.hrs)).toFixed(1);
+  const wt=weeklyType(d),wm=WTYPE_META[wt];
+  const banner='<div class="wtype '+wm.cls+'"><span class="wtype-t">'+t('rWeekly')+lb(wm.label)+'</span><span class="wtype-d">'+lb(wm.desc)+' · '+t('rRatio')+ratio+'×'+t('rEstimate')+'</span></div>';
+  const maxA=Math.max(1,...d.rows.map(r=>r.audit.hi));
+  const cards=d.rows.map(r=>{
+    const st=STATUS_META[r.status];
+    const gap=r.audit.mid-r.hrs;
+    const lamLine=r.lam.mid>1.05
+      ?'<span class="up">'+t('rExceed')+'</span>'+t('rExceedLine')+r.lam.mid+t('rHShort')+(r.two&&r.lam.wa!==undefined?(t('rExceedTwo')+r.lam.wa+'×'+t('rExceedTwo2')+r.lam.wb+'×'+t('rExceedTwo3')):'')
+      :(r.lam.mid<0.95?t('rWithin'):t('rNear'));
+    const gapLine=gap>0.5?'<div class="sub">'+t('rGap')+fmtH(gap)+t('rGap2')+'</div>':'';
+    const subLabel=r.a.subtype?(SC[r.key].sub.find(x=>x.v===r.a.subtype)||{label:{zh:'',en:''}}).label:null;
+    return '<div class="card">'+
+    '<div class="srhead"><span class="sname">'+r.name+(subLabel?'<em class="sublabel">'+lb(subLabel)+'</em>':'')+'</span>'+
+    '<span class="badge '+zoneCls(r.zone)+'">'+lb(ZONE_LABEL[r.zone])+'</span>'+
+    '<span class="stat '+r.status+'">'+st.sym+' '+lb(st.label)+'</span></div>'+
+    '<div class="bars">'+
+    '<div class="bar-wrap"><span class="bl">'+t('rUse')+'</span><div class="bar-track"><div class="bar-fill b-use" style="width:'+Math.min(100,r.hrs/maxA*100)+'%"></div></div><span>'+fmtH(r.hrs)+' h</span></div>'+
+    '<div class="bar-wrap"><span class="bl">'+t('rAudit')+'</span><div class="bar-track"><div class="bar-fill b-au" style="width:'+Math.min(100,r.audit.mid/maxA*100)+'%"></div></div><span>'+fmtH(r.audit.mid)+' h（'+fmtH(r.audit.lo)+'–'+fmtH(r.audit.hi)+'）</span></div>'+
+    '</div>'+
+    '<div class="sub">'+lamLine+'。'+t('rWeekLine')+r.hrsLabel+t('rWeekLine2')+fmtH(r.hrs)+t('rWeekLine3')+fmtH(r.audit.mid)+t('rWeekLine4')+'</div>'+
+    gapLine+
+    '<details><summary>'+t('rBasis')+'</summary><ul class="tight">'+
+    '<li>'+t('rBHours')+r.hrsLabel+'</li>'+
+    '<li>'+t('rBStop')+labelOf(STOP_OPTS,r.a.stop)+'</li>'+
+    '<li>'+t('rBCheck')+labelOf(CHECK_OPTS,r.a.check)+'</li>'+
+    '<li>'+t('rBDebt')+labelOf(DEBT_OPTS,r.a.debt)+'</li>'+
+    (r.two?'<li>'+t('qCtypeT')+' '+labelOf(CTYPE_OPTS,r.a.ctype)+'；'+t('qRespT')+' '+labelOf(RESP_OPTS,r.a.resp)+'</li>':'')+
+    '<li>'+t('rBLam')+r.lam.mid+t('rBLam2')+r.lam.lo+'–'+r.lam.hi+t('rBLam3')+(r.two&&r.lam.wa!==undefined?(t('rBLamTwo')+r.lam.wa+t('rBLamTwo2')+r.lam.wb):'')+' · '+r.src+'</li>'+
+    '</ul></details></div>';
+  }).join('');
+  const sumUl=summaryLines(rec,d).map(s=>'<li>'+s+'</li>').join('');
+  const cmp=prev?'<div class="card"><h3>'+t('rCmpH')+'</h3><ul class="tight">'+
+    comparisonLines(prev,rec).map(l=>'<li>'+l+'</li>').join('')+'</ul>'+
+    '<p class="sub">'+t('rCmpNote')+'</p></div>':'';
+  const v1note=d.isV1?'<div class="note warn">'+(lang==='zh'?'本记录按规则版本 1 解读（两摊改造前的草案口径）；本周新记录将按规则版本 2 计算。':'This record is interpreted under rules version 1 (pre-two-component draft); new records use version 2.')+'</div>':'';
+  c.innerHTML='<div class="card">'+
+  '<div class="stephead">'+isoWeekOf(mon)+' · '+weekRange(mon)+'</div>'+
+  '<h2>'+t('rTitle')+'</h2>'+
+  '<div class="kpis">'+
+  '<div class="kpi"><div class="v">'+fmtH(d.tot.hrs)+' '+t('rHShort')+'</div><div class="l">'+t('rKpiUse')+d.rows.length+t('rKpiUse2')+'</div></div>'+
+  '<div class="kpi"><div class="v">'+fmtH(d.tot.auditMid)+' '+t('rHShort')+'</div><div class="l">'+t('rKpiAudit')+fmtH(d.tot.auditLo)+'–'+fmtH(d.tot.auditHi)+t('rKpiAudit2')+'</div></div>'+
+  '<div class="kpi"><div class="v">'+(d.checkT?fmtH(d.checkT.mid):'0')+' '+t('rHShort')+'</div><div class="l">'+t('rKpiCheck')+'</div></div>'+
+  '</div>'+
+  banner+
+  v1note+
+  waterfallHTML(d)+
+  '<div class="navrow"><span></span><span><button class="btn ghost sm" id="btn-export">'+(lang==='zh'?'导出本周记录(.md)':'Export week (.md)')+'</button> <button class="btn ghost sm" id="btn-edit">'+t('tEdit')+'</button></span></div>'+
+  '</div>'+
+  cards+
+  '<div class="card"><h3>'+t('rSketchH')+'</h3><ul class="tight">'+sumUl+'</ul></div>'+
+  '<div class="nextbox"><strong>'+t('rNextH')+'</strong><p>'+nextAction(rec,d)+'</p></div>'+
+  cmp+
+  '<div class="boundbox">'+t('BOUNDARY')+'</div>';
+  $('#btn-edit').onclick=()=>startSurvey(rec);
+  $('#btn-export').onclick=()=>exportJournal(rec);
+}
+/* ===== 周报导出 ===== */
+function wkId(w){const m=parseMonday(w);const t=new Date(m);t.setDate(t.getDate()+3);const y=t.getFullYear();const n=isoWeekNum(m);return y+'-W'+(n<10?'0'+n:String(n));}
+function journalMarkdown(rec){
+  const d=deriveRecord(rec),mon=parseMonday(rec.weekMonday),wt=weeklyType(d),wm=WTYPE_META[wt];
+  const ratio=(d.tot.auditMid/Math.max(0.1,d.tot.hrs)).toFixed(1);
+  const Z=((rec.lang||lang)==='zh'); // 导出语言随作答语言
+  const rl=(rec.lang||lang); // 速率标签的数值与文字均随作答语言（v1 记录回退界面语言）
+  let md='# '+(Z?'认知周报 ':'Cognitive Weekly ')+wkId(rec.weekMonday)+'（'+weekRange(mon)+'）\n\n';
+  md+='- '+(Z?'总判读':'Overall reading')+': **'+lb(wm.label)+'**（'+lb(wm.desc)+'）\n';
+  md+='- '+(Z?'使用总时长':'Total use')+': '+fmtH(d.tot.hrs)+' h | '+(Z?'待审工时估算':'Audit-hours estimate')+': '+fmtH(d.tot.auditMid)+' h ('+fmtH(d.tot.auditLo)+'–'+fmtH(d.tot.auditHi)+') | '+(Z?'额外核查':'Extra verification')+': '+(d.checkT?fmtH(d.checkT.mid):'0')+' h\n';
+  md+='- '+(Z?'待审／使用 ≈ ':'audit/use ≈ ')+ratio+'×'+(Z?'（情景估算；速率 ':' (scenario estimate; rate ')+(LANG_RATE[rl].label[rl]||LANG_RATE[rl].label.zh)+')\n';
+  md+='- rulesVersion: '+(rec.rulesVersion||1)+(d.isV1?(Z?'（本记录按 v1 草案口径解读）':' (interpreted under v1 draft)'):'')+'\n\n';
+  if(d.isV1){
+    md+='## '+(Z?'场景':'Scenarios')+'\n\n| '+(Z?'场景|时长档|周小时|λ|待审(区间)|停|核查|债务|状态':'Scenario|Time tier|Week h|λ|Audit(range)|Stop|Verified|Debt|Status')+' |\n|---|---|---|---|---|---|---|---|---|\n';
+    d.rows.forEach(r=>{
+      const sub=r.a.subtype?((SC[r.key].sub||[]).find(x=>x.v===r.a.subtype)||{label:{zh:'',en:''}}).label:'';
+      md+='| '+r.name+(sub?'（'+lb(sub)+'）':'')+' | '+r.hrsLabel+' | '+fmtH(r.hrs)+' | '+r.lam.mid+' | '+fmtH(r.audit.mid)+'（'+fmtH(r.audit.lo)+'–'+fmtH(r.audit.hi)+'） | '+labelOf(STOP_OPTS,r.a.stop)+' | '+labelOf(CHECK_OPTS,r.a.check)+' | '+labelOf(DEBT_OPTS,r.a.debt)+' | '+lb(STATUS_META[r.status].label)+' |\n';
+    });
+  }else{
+    md+='## '+(Z?'场景':'Scenarios')+'\n\n| '+(Z?'场景|时长档|周小时|内容|责任者|λ(通读+核摊)|待审(区间)|停|核查|债务|状态':'Scenario|Time tier|Week h|Content|Party|λ(read+verify)|Audit(range)|Stop|Verified|Debt|Status')+' |\n|---|---|---|---|---|---|---|---|---|---|---|\n';
+    d.rows.forEach(r=>{
+      md+='| '+r.name+' | '+r.hrsLabel+' | '+fmtH(r.hrs)+' | '+(r.two?labelOf(CTYPE_OPTS,r.a.ctype):'—')+' | '+(r.two?labelOf(RESP_OPTS,r.a.resp):'—')+' | '+r.lam.mid+(r.two&&r.lam.wa!==undefined?(' ('+r.lam.wa+'+'+r.lam.wb+')'):'')+' | '+fmtH(r.audit.mid)+'（'+fmtH(r.audit.lo)+'–'+fmtH(r.audit.hi)+'） | '+labelOf(STOP_OPTS,r.a.stop)+' | '+labelOf(CHECK_OPTS,r.a.check)+' | '+labelOf(DEBT_OPTS,r.a.debt)+' | '+lb(STATUS_META[r.status].label)+' |\n';
+    });
+  }
+  md+='\n## '+(Z?'速写':'Sketch')+'\n\n'+summaryLines(rec,d).map(s=>'- '+s).join('\n')+'\n\n';
+  md+='## '+(Z?'下一步':'Next')+'\n\n'+nextAction(rec,d)+'\n';
+  md+='\n## '+(Z?'原始记录（机器可读，可用于恢复）':'Raw record (machine-readable, for restore)')+'\n\n```json\n'+JSON.stringify(rec,null,2)+'\n```\n';
+  return md;
+}
+function exportJournal(rec){
+  const blob=new Blob([journalMarkdown(rec)],{type:'text/markdown'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=wkId(rec.weekMonday)+'.md';
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+  toast(t('dMdExported')+wkId(rec.weekMonday)+'.md'+t('dMdExported2'));
+}
+/* ===== 跟踪页 ===== */
+function renderTrack(){
+  const c=$('#page-track');
+  if(!store.records.length){
+    c.innerHTML='<div class="card empty"><h2>'+t('tEmptyH')+'</h2><p>'+t('tEmptyP')+'</p></div>';
+    return;
+  }
+  const recs=[...store.records].reverse();
+  const cards=recs.map(r=>{
+    const d=deriveRecord(r),mon=parseMonday(r.weekMonday),wt=weeklyType(d);
+    const strip=d.rows.map(x=>{const st=STATUS_META[x.status];
+      return '<span class="si">'+x.name+'<b class="'+x.status+'">'+st.sym+'</b></span>';}).join('');
+    return '<div class="card">'+
+    '<div class="stephead">'+isoWeekOf(mon)+' · '+weekRange(mon)+'</div>'+
+    '<div class="trow">'+d.rows.length+t('tRowLine')+fmtH(d.tot.hrs)+t('tRowLine2')+fmtH(d.tot.auditMid)+t('tRowLine3')+'<b style="color:'+WTYPE_META[wt].color+'">'+lb(WTYPE_META[wt].label)+'</b></div>'+
+    '<div class="strip">'+strip+'</div>'+
+    '<div class="navrow"><span></span><span>'+
+    '<button class="btn ghost sm" data-view="'+r.weekMonday+'">'+t('tView')+'</button> '+
+    '<button class="btn ghost sm" data-edit="'+r.weekMonday+'">'+t('tEdit')+'</button></span></div></div>';
+  }).join('');
+  const chart=weeksChartHTML();
+  let matrix='';
+  if(store.records.length>=2){
+    const weeks=store.records.map(r=>r.weekMonday);
+    const keys=SCENARIOS.map(s=>s.key).filter(k=>store.records.some(r=>r.scenarios[k]));
+    const head=weeks.map(w=>'<th>'+wkShort(w)+'</th>').join('');
+    const body=keys.map(k=>{
+      const cells=weeks.map(w=>{
+        const a=store.records.find(r=>r.weekMonday===w).scenarios[k];
+        if(!a)return '<td style="color:var(--dim)">·</td>';
+        const stt=scenarioStatus(a),st=STATUS_META[stt],hrs=HOURS_MID[a.hours]*7;
+        return '<td><b class="'+stt+'" title="'+fmtH(hrs)+' h · '+lb(st.label)+'">'+st.sym+'</b></td>';
+      }).join('');
+      return '<tr><td class="sct">'+lb(SC[k].name)+'</td>'+cells+'</tr>';
+    }).join('');
+    matrix='<div class="card"><h3>'+t('tMatrixH')+'</h3>'+
+    '<div class="legend">'+Object.keys(STATUS_META).map(k=>'<span><b class="'+k+'">'+STATUS_META[k].sym+'</b> '+lb(STATUS_META[k].label)+'</span>').join('')+'<span><b>·</b> '+t('tUnused')+'</span></div>'+
+    '<div class="tw"><table><thead><tr><th></th>'+head+'</tr></thead><tbody>'+body+'</tbody></table></div>'+
+    '<p class="sub">'+t('tMatrixSub')+'</p></div>';
+  }
+  c.innerHTML=chart+cards+matrix;
+  c.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{
+    currentRecord=store.records.find(r=>r.weekMonday===b.dataset.view);go('result');});
+  c.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>{
+    startSurvey(store.records.find(r=>r.weekMonday===b.dataset.edit));});
+}
+/* ===== 数据页 ===== */
+function renderData(){
+  const c=$('#page-data');
+  const n=store.records.length;
+  let size='?';
+  try{size=(localStorage.getItem(LS_KEY)||'').length;}catch(e){}
+  c.innerHTML='<div class="card"><h3>'+t('dTitle')+'</h3>'+
+  '<p class="sub">'+n+t('dSub')+(size==='?'?size:(Math.round(size/1024)+' KB'))+'。</p>'+
+  '<div class="navrow" style="justify-content:flex-start">'+
+  '<button class="btn sm" id="btn-export">'+t('dExport')+'</button>'+
+  '<label class="btn ghost sm" style="display:inline-block;cursor:pointer">'+t('dImport')+'<input type="file" id="file-import" accept=".json,application/json" style="display:none"></label>'+
+  '<button class="btn ghost sm" id="btn-clear">'+t('dClear')+'</button></div>'+
+  '<p class="sub" style="margin-top:12px">'+lb(APP_NAME)+' '+APP_VERSION+' · '+t('dRules')+' 2 · '+lb(RIGHTS)+'</p></div>';
+  $('#btn-export').onclick=exportData;
+  $('#file-import').onchange=e=>{if(e.target.files[0])importData(e.target.files[0]);e.target.value='';};
+  $('#btn-clear').onclick=()=>{
+    if(confirm(t('dClear1'))&&confirm(t('dClear2'))){
+      store={records:[]};saveStore(store);currentRecord=null;toast(t('toastCleared'));go('track');
+    }
+  };
+}
+function exportData(){
+  const blob=new Blob([JSON.stringify({app:'cognoweek',schemaVersion:1,exportedAt:new Date().toISOString(),records:store.records},null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=(lang==='zh'?'认知雷诺数_导出_':'cognoweek_export_')+isoDate(new Date()).replace(/-/g,'')+'.json';
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+  toast(t('dExported')+store.records.length+t('dExported2'));
+}
+function importData(file){
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const o=JSON.parse(r.result);
+      const arr=Array.isArray(o)?o:(Array.isArray(o.records)?o.records:null);
+      if(!arr)throw new Error('bad');
+      let n=0,skip=0;
+      arr.forEach(x=>{
+        if(x&&typeof x.weekMonday==='string'&&x.scenarios&&x.general){
+          const i=store.records.findIndex(r2=>r2.weekMonday===x.weekMonday);
+          if(i>=0)store.records[i]=x;else store.records.push(x);n++;
+        }else skip++;
+      });
+      store.records.sort((a,b)=>a.weekMonday<b.weekMonday?-1:1);
+      saveStore(store);
+      currentRecord=store.records[store.records.length-1]||null;
+      toast(t('dImported')+n+t('dImported2')+(skip?(t('dImported3')+skip+t('dImported4')):''));
+      go('track');
+    }catch(e){toast(t('dImportFail'));}
+  };
+  r.readAsText(file,'utf-8');
+}
+/* ===== 方法页 ===== */
+function renderMethodPage(){
+  const c=$('#page-method');
+  const Z=lang==='zh';
+  const zoneRow=(zk,sc,feat)=>'<tr><td><span class="badge '+zoneCls(zk)+'">'+lb(ZONE_LABEL[zk])+'</span></td><td>'+sc+'</td><td>'+feat+'</td></tr>';
+  let paramRows='';
+  SCENARIOS.forEach(s=>{
+    const zone=lb(ZONE_LABEL[s.zone]);
+    const mk=(name,lamTxt,src)=>'<tr><td>'+name+'</td><td><span class="badge '+zoneCls(s.zone)+'">'+zone+'</span></td><td>'+lamTxt+'</td><td class="src">'+src+'</td></tr>';
+    if(s.formula&&s.key==='shortvideo'){
+      const nn=lamV2('shortvideo',{ctype:'natural',resp:'signed'});
+      const ss=lamV2('shortvideo',{ctype:'social',resp:'anon'});
+      paramRows+=mk(lb(s.name),nn.mid+'（'+nn.lo+'–'+nn.hi+'）'+(Z?' · 讲解·署名<br>':' · explainer·signed<br>')+ss.mid+'（'+ss.lo+'–'+ss.hi+'）'+(Z?' · 带货·匿名':' · promotion·anon'),lb(s.src));
+    }else if(s.formula&&s.key==='ai'){
+      s.sub.forEach(o=>{
+        const l=lamV2('ai',{subtype:o.v,ctype:'natural',resp:'signed'});
+        paramRows+=mk(lb(s.name)+'·'+lb(o.label).split('：')[0],l.mid+'（'+l.lo+'–'+l.hi+'）'+(Z?'（通读 ':' (reading ')+l.wa+(Z?' ＋ 核摊 ':' + verification ')+l.wb+'）',lb(s.src));
+      });
+    }else{
+      paramRows+=mk(lb(s.name),s.lam.mid+'（'+s.lam.lo+'–'+s.lam.hi+'）',lb(s.src));
+    }
+  });
+  c.innerHTML=
+  '<div class="card"><h1>'+t('mTitle')+'</h1>'+
+  '<p class="sub">'+t('mSub')+'</p>'+
+  '<p>'+t('mIntro1')+'</p>'+
+  '<p class="demoNote">'+t('mDemo')+'</p>'+
+  '<p>'+t('mIntro2')+'</p></div>'+
+  '<div class="card"><h2>'+t('mRatioH')+'</h2>'+
+  '<p>'+t('mRatioP1')+'</p><ul class="tight"><li>'+t('mRatioNum')+'</li><li>'+t('mRatioDen')+'</li></ul>'+
+  '<p>'+t('mRatioP2')+'</p>'+
+  '<p class="sub">'+t('mRatioEx')+'</p>'+
+  '<p>'+t('mRatioTwo')+'</p></div>'+
+  '<div class="card"><h2>'+t('mFormH')+'</h2>'+
+  '<p>'+t('mFormP')+'</p>'+
+  '<div class="tw"><table><tr><th>'+t('mFormTh1')+'</th><th>'+t('mFormTh2')+'</th><th>'+t('mFormTh3')+'</th></tr>'+
+  zoneRow('lami',Z?'书籍、音频、电话':'Books, audio, calls',t('mFormL'))+
+  zoneRow('trans',Z?'长视频、网页、消息、社交媒体':'Long video, web, messaging, social',t('mFormT'))+
+  zoneRow('turbtime',Z?'短视频、直播电商、AI 生成':'Short video, live commerce, AI generation',t('mFormB'))+
+  '</table></div></div>'+
+  '<div class="card"><h2>'+t('mFourH')+'</h2><ul class="tight">'+
+  '<li>'+t('mFour1')+'</li><li>'+t('mFour2')+'</li><li>'+t('mFour3')+'</li><li>'+t('mFour4')+'</li></ul>'+
+  '<p class="sub">'+t('mFourSub')+'</p></div>'+
+  '<div class="card"><h2>'+t('mReadH')+'</h2><ul class="tight">'+
+  '<li>'+t('mRead1')+'</li><li>'+t('mRead2')+'</li><li>'+t('mRead3')+'</li><li>'+t('mRead4')+'</li><li>'+t('mRead5')+'</li></ul></div>'+
+  '<div class="card"><h2>'+t('mTrackH')+'</h2><p>'+t('mTrackP')+'</p></div>'+
+  '<div class="card"><h2>'+t('mParamH')+'</h2>'+
+  '<p class="sub">'+t('mParamSub')+'<br>'+t('mParamRate')+lb(LANG_RATE[lang].label)+'；'+lb(LANG_RATE[lang].refSrc)+'</p>'+
+  '<div class="tw"><table><thead><tr><th>'+t('mParamTh1')+'</th><th>'+t('mParamTh2')+'</th><th>'+t('mParamTh3')+'</th><th>'+t('mParamTh4')+'</th></tr></thead>'+
+  '<tbody>'+paramRows+'</tbody></table></div>'+
+  '<p class="sub" style="margin-top:8px">'+t('mParamFoot')+'</p></div>'+
+  '<div class="card"><h2>'+t('mAboutH')+'</h2><div id="about-disclaimer" class="gatelist">'+disclaimerHTML()+'</div></div>';
+}
+/* ===== 导航与初始化 ===== */
+function go(name){
+  curPage=name;
+  ['method','survey','result','track','data'].forEach(n=>{
+    const p=$('#page-'+n),tt=$('#tab-'+n);
+    if(p)p.classList.toggle('active',n===name);
+    if(tt)tt.classList.toggle('on',n===name);
+  });
+  if(name==='survey')renderSurvey();
+  if(name==='result')renderResult(currentRecord);
+  if(name==='track')renderTrack();
+  if(name==='data')renderData();
+  window.scrollTo(0,0);
+}
+function applyStaticText(){
+  $('#tab-method').textContent=t('tabMethod');
+  $('#tab-survey').textContent=t('tabSurvey');
+  $('#tab-result').textContent=t('tabResult');
+  $('#tab-track').textContent=t('tabTrack');
+  $('#tab-data').textContent=t('tabData');
+  $('#btn-lang').textContent=t('langBtn');
+  $('#gate-head').textContent=t('gateHead');
+  $('#gate-title').textContent=t('gateTitle');
+  $('#gate-decline').textContent=t('gateDecline');
+  $('#gate-accept').textContent=t('gateAccept');
+}
+document.addEventListener('click',e=>{
+  const ch=e.target.closest('.chip');
+  if(!ch)return;
+  const box=ch.closest('.chips');
+  if(!box)return;
+  const v=ch.dataset.v;
+  if(box.dataset.k&&draft&&draft.answers[box.dataset.k]){draft.answers[box.dataset.k][box.dataset.q]=v;}
+  else if(box.dataset.q&&draft&&draft.general){draft.general[box.dataset.q]=v;}
+  else return;
+  box.querySelectorAll('.chip').forEach(x=>x.classList.toggle('sel',x===ch));
+});
+['method','survey','result','track','data'].forEach(n=>{
+  $('#tab-'+n).onclick=()=>go(n);
+});
+$('#btn-lang').onclick=()=>setLang(lang==='zh'?'en':'zh');
+function initGate(){
+  let agreed=false;
+  try{agreed=!!localStorage.getItem(GATE_KEY);}catch(e){}
+  $('#gate-disclaimer').innerHTML=disclaimerHTML();
+  const g=$('#gate');
+  if(!agreed)g.style.display='flex';
+  $('#gate-accept').onclick=()=>{try{localStorage.setItem(GATE_KEY,'1');}catch(e){}g.style.display='none';};
+  $('#gate-decline').onclick=()=>{
+    $('#gate-inner').innerHTML='<h2>'+t('gateDeclined')+'</h2><p class="sub">'+t('gateDeclinedBody')+'</p>';
+  };
+}
+document.documentElement.lang=(lang==='zh'?'zh-CN':'en');
+applyStaticText();
+initGate();
+renderMethodPage();
+currentRecord=store.records[store.records.length-1]||null;
+go(store.records.length?'result':'method');
+</script>
+</body>
+</html>

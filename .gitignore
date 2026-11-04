@@ -1,0 +1,11 @@
+# OS junk
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+# editor / temp
+.vscode/
+*.bak
+*.tmp
+~$*
